@@ -13,6 +13,8 @@ export class AllUser implements Users {
   emitAction;
   emitMotorEvent;
   trainDecisionTree;
+  trainDecisionTreeSklearn;
+  predictDecisionTree;
 
   constructor({ activity, hosts }: { activity: Activity; hosts: string[] }) {
     const thymioIA = Container.factoryFromInjectable<IThymioIA>('BOUNDED_CONTEXT', 'ThymioIA', [], { activity, hosts });
@@ -28,5 +30,7 @@ export class AllUser implements Users {
     this.emitAction = thymioIA.emitAction;
     this.emitMotorEvent = thymioIA.emitMotorEvent;
     this.trainDecisionTree = thymioIA.trainDecisionTree;
+    this.trainDecisionTreeSklearn = thymioIA.trainDecisionTreeSklearn;
+    this.predictDecisionTree = thymioIA.predictDecisionTree;
   }
 }

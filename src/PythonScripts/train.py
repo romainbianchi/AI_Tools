@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 
 import numpy as np
 import pandas as pd
@@ -9,13 +9,13 @@ from sklearn import tree
 
 
 app = Flask(__name__)
-CORS(app)
+cors = CORS(app, resources={r"*": {"origins": "*"}})
+app.config['CORS_HEADERS'] = 'Content-Type'
 
-# Define the model as a global variable
-# model = None
 
 
 @app.route('/train', methods=['POST'])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def train_model():
     data = request.json  # Get the JSON data from the request body
     # Process the received data as needed (e.g., train a machine learning model)
@@ -70,62 +70,64 @@ def train_model():
     predicted_action = actions[np.argmax(predictions)]
     print('Predicted action: ', predicted_action)
 
-
-    # Accuracy of the model on the train dataset
-    print('---------------- ACCURACY ----------------')
-    model.compile(metrics=["accuracy"])
-    print(model.evaluate(train_ds))
-
-    # vizualize the model
-    print('---------------- VIZUALIZATION ----------------')
-    print(model.make_inspector().extract_tree(0))
-    print(model.make_inspector().extract_tree(1))
-    
-    
-
     # Send back a response
     response_data = {'message': 'Apagnan'}
     return jsonify(response_data), 200
 
 
-# @app.route('/train_sklearn', methods=['POST'])
-# def train_model_sklearn():
 
-#     # Get data
-#     data = request.json
+@app.route('/trainsklearn', methods=['POST'])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
+def train_model_sklearn():
 
-#     # Create classifier
-#     clf = tree.DecisionTreeClassifier()
+    # Define the model as a global variable
+    global model
 
-#     # Convert to dataframe
-#     df = pd.DataFrame(data)
-#     df.rename(columns={'captors': 'sensors'}, inplace=True)
-#     df_sensors = pd.DataFrame(df['sensors'].values.tolist(), columns=[f'sensor_{i}' for i in range(len(df['sensors'].iloc[0]))])
-#     df = pd.concat([df.drop('sensors', axis=1), df_sensors], axis=1)
+    # Get data
+    data = request.json
 
-#     # Train the model
-#     X = df.drop('action', axis=1)
-#     y = df['action']
-#     clf = clf.fit(X, y)
+    # Create classifier
+    clf = tree.DecisionTreeClassifier()
 
-#     model = clf
+    # Convert to dataframe
+    df = pd.DataFrame(data)
+    df.rename(columns={'captors': 'sensors'}, inplace=True)
+    df_sensors = pd.DataFrame(df['sensors'].values.tolist(), columns=[f'sensor_{i}' for i in range(len(df['sensors'].iloc[0]))])
+    df = pd.concat([df.drop('sensors', axis=1), df_sensors], axis=1)
+
+    # Train the model
+    X = df.drop('action', axis=1)
+    y = df['action']
+    clf = clf.fit(X, y)
+
+    model = clf
+
+    # Send back a response
+    response_data = {'message': 'TrainSkLearn'}
+    return jsonify(response_data), 200
 
 
-# @app.route('/predict', methods=['POST'])
-# def predict():
-#     data = request.json
 
-#     # Convert to dataframe
-#     df = pd.DataFrame(data)
-#     df.rename(columns={'captors': 'sensors'}, inplace=True)
-#     df_sensors = pd.DataFrame(df['sensors'].values.tolist(), columns=[f'sensor_{i}' for i in range(len(df['sensors'].iloc[0]))])
+@app.route('/predict', methods=['POST'])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
+def predict():
 
-#     # Make predictions
-#     predictions = model.predict(df_sensors)
+    global model
+
+    print('test')
+
+    # Get data
+    data = request.json
+    data = [data]
+
+    # Make predictions
+    predictions = model.predict(data)
     
-#     # Send back a response
-#     response_data = {'predictions': predictions.tolist()}
-#     return jsonify(response_data), 200
+    # Send back a response
+    response_data = {'predictions': predictions.tolist()}
+    return jsonify(response_data), 200
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

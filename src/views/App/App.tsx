@@ -100,25 +100,23 @@ const App = observer(() => {
     // add new data when click on the action
     setData([...data, { action, captors: user.captors.state[controledRobot] }]);
     // emit event to the robot
-    await user.emitMotorEvent(controledRobot, action);
+    // await user.emitMotorEvent(controledRobot, action);
   }
 
   const onTrain = async (data: { action: string; captors: number[] }[]) => {
     // Train with tensorflow
-    await user.trainDecisionTree(data);
+    // await user.trainDecisionTree(data);
 
     // Train with sklearn
-    // await user.trainDecisionTreeSklearn(data);
-    console.log('Train')
+    await user.trainDecisionTreeSklearn(data);
     
     // Set the training result
     setTrainingResult('Training completed!');
   }
 
-  // const onPredict = async () => {
-  //   const result = await user.predictDecisionTree(user.captors.state[controledRobot]);
-  //   console.log('Prediction:', result);
-  // }
+  const onPredict = async () => {
+    await user.predictDecisionTree(user.captors.state[controledRobot]);
+  }
 
 
   // Render
@@ -132,7 +130,7 @@ const App = observer(() => {
       <button onClick={() => onTrain(data)}>Train</button>
 
       {/* Make perdiction */}
-      {/* <button onClick={() => onPredict()}>Predict</button> */}
+      <button onClick={() => onPredict()}>Predict</button>
 
       {/* Display the data collected on screen */}
       <pre>{JSON.stringify(data, null)}</pre>

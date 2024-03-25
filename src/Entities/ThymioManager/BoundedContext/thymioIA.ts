@@ -199,52 +199,52 @@ export class ThymioIA implements IThymioIA {
     }
   };
 
-  // trainDecisionTreeSklearn = async (data: { action: string; captors: number[] }[]) => {
-  //   // Convert the data to JSON
-  //   const jsonData = JSON.stringify(data);
+  trainDecisionTreeSklearn = async (data: { action: string; captors: number[] }[]) => {
+    // Convert the data to JSON
+    const jsonData = JSON.stringify(data);
 
-  //   // Send the data to the Python script using Flask
-  //   const response = await fetch('http://127.0.0.1:5000/train_sklearn', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: jsonData,
-  //   });
+    // Send the data to the Python script using Flask
+    const response = await fetch('http://127.0.0.1:5000/trainsklearn', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonData,
+    });
 
-  //   // Check if the request was successful
-  //   if (response.ok) {
-  //     // Launch the function in the Python script
-  //     const result = await response.json();
-  //     console.log('Training completed:', result);
-  //     return result;
-  //   } else {
-  //     console.error('Failed to train decision tree');
-  //   }
-  // };
+    // Check if the request was successful
+    if (response.ok) {
+      // Launch the function in the Python script
+      const result = await response.json();
+      console.log('Training completed:', result);
+      return result;
+    } else {
+      console.error('Failed to train decision tree');
+    }
+  };
 
-  // predictDecisionTree = async (captors: number[]) => {
-  //   // Convert the data to JSON
-  //   const jsonData = JSON.stringify(captors);
+  predictDecisionTree = async (captors: number[]) => {
+    // Convert the data to JSON
+    const jsonData = JSON.stringify(captors);
 
-  //   // Send the data to the Python script using Flask
-  //   const response = await fetch('http://127.0.0.1:5000/predict', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: jsonData,
-  //   });
+    // Send the data to the Python script using Flask
+    const response = await fetch('http://127.0.0.1:5000/predict', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonData,
+    });
 
-  //   // Check if the request was successful
-  //   if (response.ok) {
-  //     // Launch the function in the Python script
-  //     const result = await response.json();
-  //     console.log('Prediction:', result);
-  //     return result;
-  //   } else {
-  //     console.error('Failed to predict decision tree');
-  //   }
-  // };
+    // Check if the request was successful
+    if (response.ok) {
+      // Launch the function in the Python script
+      const result = await response.json();
+      console.log('Prediction:', result);
+      return result;
+    } else {
+      console.error('Failed to predict decision tree');
+    }
+  };
 
 }
