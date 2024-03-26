@@ -45,22 +45,24 @@ const App = observer(() => {
       output: action,
     }));
 
-    await user.trainModel(data);
+    // await user.trainModel(data);
     setMode('PREDICT');
   };
 
   useEffect(() => {
     if (mode === 'PREDICT') {
-      const data = user.captors.state[controledRobot].map(captor => captor.toString());
-      user.predict(controledRobot, data);
+      // const data = user.captors.state[controledRobot].map(captor => captor.toString());
+      // user.predict(controledRobot, data);
+      user.predictDecisionTree(user.captors.state[controledRobot]);
     }
   }, [mode, user.captors.state, controledRobot]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (mode === 'PREDICT') {
-        const data = user.captors.state[controledRobot].map(captor => captor.toString());
-        user.predict(controledRobot, data);
+        // const data = user.captors.state[controledRobot].map(captor => captor.toString());
+        // user.predict(controledRobot, data);
+        user.predictDecisionTree(user.captors.state[controledRobot]);
       }
     }, 1000);
 
@@ -131,6 +133,9 @@ const App = observer(() => {
 
       {/* Make perdiction */}
       <button onClick={() => onPredict()}>Predict</button>
+
+      {/* Execute */}
+      <button onClick={() => onExecute()}>Execute</button>
 
       {/* Display the data collected on screen */}
       <pre>{JSON.stringify(data, null)}</pre>

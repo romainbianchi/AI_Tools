@@ -114,8 +114,6 @@ def predict():
 
     global model
 
-    print('test')
-
     # Get data
     data = request.json
     data = [data]
