@@ -25,7 +25,9 @@ const App = observer(() => {
   const [actions, setActions] = useState<string[]>(['FORWARD', 'BACKWARD', 'LEFT', 'RIGHT', 'STOP']); // List of actions
 
   // Tree elements
-  const [treeElements, setTreeElements] = useState<string[]>([]); // List of elements in the tree
+  // const [treeElements, setTreeElements] = useState<string[]>([]); // List of elements in the tree
+  // State to hold objects with both the element and its type
+  const [treeElements, setTreeElements] = useState<{ name: string; type: string }[]>([]);
   const [treeConections, setTreeConnections] = useState<{ from: string, to: string }[]>([]); // List of connections between elements in the tree
 
   // Comportemebts
@@ -81,23 +83,41 @@ const App = observer(() => {
     e.dataTransfer.setData('draggedData', data);
   }
 
-  const handleOnDrop = (e: React.DragEvent) => {
+  const handleOnDrop = (e: React.DragEvent, dropAreaType: string) => {
 
     const droppedData = e.dataTransfer.getData('draggedData');
 
     if (droppedData) {
       const { type, name } = JSON.parse(droppedData);
       console.log('droppedData', type, name);
-      
-      if (type === 'action') {
-        setAction(name);
-        setActions(actions.filter(action => action !== name));
-        setTreeElements([...treeElements, name]);
-      } else if (type === 'condition') {
-        setConditions(conditions.filter(condition => condition !== name));
-        setTreeElements([...treeElements, name]);
-      }
 
+      // handle case when the element is dropped in the target box
+      if (dropAreaType === 'target') {
+        if (!treeElements.some(element => element.name === name)) {
+          if (type === 'action') {
+            setActions(actions.filter(action => action !== name));
+            setTreeElements([...treeElements, {name: name, type: 'action'}]);
+          } else if (type === 'condition') {
+            setConditions(conditions.filter(condition => condition !== name));
+            setTreeElements([...treeElements, {name: name, type: 'condition'}]);
+          }
+        }
+      } 
+
+      // handle case when the element is dropped in the initial box
+      if (dropAreaType === 'initial') {
+        if (type === 'action') {
+          if (!actions.includes(name)) {
+            setActions([...actions, name]);
+            setTreeElements(treeElements.filter(element => element.name !== name));
+          }
+        } else if (type === 'condition') {
+          if (!conditions.includes(name)) {
+            setConditions([...conditions, name]);
+            setTreeElements(treeElements.filter(element => element.name !== name));
+          }
+        }
+      }
     }
   }
 
@@ -172,10 +192,10 @@ const App = observer(() => {
             {/* left columns */}
             <div className="column">
               <div className="leftColumnBox">
-                <div className='targetBox' onDrop={handleOnDrop} onDragOver={handleOnDragOver}>Drop Area
+                <div className='targetBox' onDrop={(e) => handleOnDrop(e, 'target')} onDragOver={handleOnDragOver}>Drop Area
                   <div className='grid'>
                     {treeElements.map((element, index) => (
-                      <div key={index} className='draggableBox'>{element}</div>
+                      <div key={index} draggable="true" className='draggableBox' onDragStart={(e) => handleOnDrag(e, element.type, element.name)}>{element.name}</div>
                     ))}
                   </div>
                 </div>
@@ -189,8 +209,8 @@ const App = observer(() => {
               {/* Box for conditions */}
               <div className="rightColumnBox">
                 <h2>Conditions</h2>
-                <div className="grid">
-                  {/* Remaining conditoin in the right column */}
+                <div className="grid" onDrop={(e) => handleOnDrop(e, 'initial')} onDragOver={handleOnDragOver}>
+                  {/* Remaining conditions in the right column */}
                   {conditions.map((condition, index) => (
                     <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'condition', condition)}>{condition}</div>
                   ))}
@@ -200,7 +220,7 @@ const App = observer(() => {
               {/* Box for actions */}
               <div className="rightColumnBox">
                 <h2>Actions</h2>
-                <div className="grid">
+                <div className="grid" onDrop={(e) => handleOnDrop(e, 'initial')} onDragOver={handleOnDragOver}>
                   {/* Remaining actions in the right column */}
                   {actions.map((action, index) => (
                     <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'action', action)}>{action}</div>
