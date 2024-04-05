@@ -34,3 +34,4 @@ export class AllUser implements Users {
     this.predictDecisionTree = thymioIA.predictDecisionTree;
   }
 }
+

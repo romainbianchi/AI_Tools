@@ -71,7 +71,7 @@ def train_model():
     print('Predicted action: ', predicted_action)
 
     # Send back a response
-    response_data = {'message': 'Apagnan'}
+    response_data = {'message': 'TrainTensorflow'}
     return jsonify(response_data), 200
 
 

@@ -15,7 +15,7 @@ interface IThymioIA {
   emitMotorEvent: (uuid: string, action: string) => Promise<void>;
   trainDecisionTree: (data: { action: string; captors: number[] }[]) => Promise<void>;
   trainDecisionTreeSklearn: (data: { action: string; captors: number[] }[]) => Promise<void>;
-  predictDecisionTree: (captors: number[]) => Promise<void>;
+  predictDecisionTree: (uuid: string, captors: number[]) => Promise<void>;
 }
 
 export default IThymioIA;

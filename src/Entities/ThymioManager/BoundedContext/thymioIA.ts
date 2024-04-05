@@ -170,9 +170,9 @@ export class ThymioIA implements IThymioIA {
         break;
     }
 
-    setTimeout(() => {
-      this.emitAction(uuid, 'M_motors', [0, 0]);
-    }, 600);
+    // setTimeout(() => {
+    //   this.emitAction(uuid, 'M_motors', [0, 0]);
+    // }, 600);
   };
 
   trainDecisionTree = async (data: { action: string; captors: number[] }[]) =>{
@@ -223,7 +223,7 @@ export class ThymioIA implements IThymioIA {
     }
   };
 
-  predictDecisionTree = async (captors: number[]) => {
+  predictDecisionTree = async (uuid: string, captors: number[]) => {
     // Convert the data to JSON
     const jsonData = JSON.stringify(captors);
 
@@ -240,7 +240,8 @@ export class ThymioIA implements IThymioIA {
     if (response.ok) {
       // Launch the function in the Python script
       const result = await response.json();
-      console.log('Prediction:', result);
+      var action = result['predictions'][0];
+      this.emitMotorEvent(uuid, action);
       return result;
     } else {
       console.error('Failed to predict decision tree');

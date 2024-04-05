@@ -13,15 +13,20 @@ const App = observer(() => {
   const [robots, setRobots] = useState<string[]>([]);
   const [controledRobot, setControledRobot] = useState<string>('');
   const [trainer, setTrainer] = useState<{ uuid: string; action: string; captors: number[] }[]>([]);
-  // store the data for the training
+  // Store the data for the training
   const [data, setData] = useState<{ action: string; captors: number[] }[]>([]);
-  // store training result
+
+  // Store training result
   const [trainingResult, setTrainingResult] = useState<string>('');
+
   const [mode, setMode] = useState<'TRAIN' | 'PREDICT'>('TRAIN');
   const [conditions, setConditions] = useState<string[]>(['Condition 1', 'condition 2', 'Condition 3', 'Condition 4', 'Conditon 5', 'Condition 6', 'Condition 7']); // List of conditions
   const [action, setAction] = useState<string>('STOP'); // Selected action
   const [actions, setActions] = useState<string[]>(['FORWARD', 'BACKWARD', 'LEFT', 'RIGHT', 'STOP']); // List of actions
 
+  // Tree elements
+  const [treeElements, setTreeElements] = useState<string[]>([]); // List of elements in the tree
+  const [treeConections, setTreeConnections] = useState<{ from: string, to: string }[]>([]); // List of connections between elements in the tree
 
   // Comportemebts
   const onClickGetRobots = async () => {
@@ -53,7 +58,7 @@ const App = observer(() => {
     if (mode === 'PREDICT') {
       // const data = user.captors.state[controledRobot].map(captor => captor.toString());
       // user.predict(controledRobot, data);
-      user.predictDecisionTree(user.captors.state[controledRobot]);
+      user.predictDecisionTree(controledRobot, user.captors.state[controledRobot]);
     }
   }, [mode, user.captors.state, controledRobot]);
 
@@ -62,7 +67,7 @@ const App = observer(() => {
       if (mode === 'PREDICT') {
         // const data = user.captors.state[controledRobot].map(captor => captor.toString());
         // user.predict(controledRobot, data);
-        user.predictDecisionTree(user.captors.state[controledRobot]);
+        user.predictDecisionTree(controledRobot, user.captors.state[controledRobot]);
       }
     }, 1000);
 
@@ -87,8 +92,10 @@ const App = observer(() => {
       if (type === 'action') {
         setAction(name);
         setActions(actions.filter(action => action !== name));
+        setTreeElements([...treeElements, name]);
       } else if (type === 'condition') {
         setConditions(conditions.filter(condition => condition !== name));
+        setTreeElements([...treeElements, name]);
       }
 
     }
@@ -117,7 +124,7 @@ const App = observer(() => {
   }
 
   const onPredict = async () => {
-    await user.predictDecisionTree(user.captors.state[controledRobot]);
+    await user.predictDecisionTree(controledRobot, user.captors.state[controledRobot]);
   }
 
 
@@ -125,7 +132,8 @@ const App = observer(() => {
   return (
     <>
       <h1>DecisionTree</h1>
-
+      
+      {/* Apply chosen action */}
       <button onClick={() => onAction(action)}>MOVE</button>
 
       {/* start the training */}
@@ -164,8 +172,13 @@ const App = observer(() => {
             {/* left columns */}
             <div className="column">
               <div className="leftColumnBox">
-                <h2>Tree</h2>
-                <div className='targetBox' onDrop={handleOnDrop} onDragOver={handleOnDragOver}>Drop Area</div>
+                <div className='targetBox' onDrop={handleOnDrop} onDragOver={handleOnDragOver}>Drop Area
+                  <div className='grid'>
+                    {treeElements.map((element, index) => (
+                      <div key={index} className='draggableBox'>{element}</div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
 
