@@ -72,8 +72,6 @@ const App = observer(() => {
 
   useEffect(() => {
     if (mode === 'PREDICT') {
-      // const data = user.captors.state[controledRobot].map(captor => captor.toString());
-      // user.predict(controledRobot, data);
       user.predictDecisionTree(controledRobot, user.captors.state[controledRobot]);
     }
   }, [mode, user.captors.state, controledRobot]);
@@ -81,8 +79,6 @@ const App = observer(() => {
   useEffect(() => {
     const interval = setInterval(() => {
       if (mode === 'PREDICT') {
-        // const data = user.captors.state[controledRobot].map(captor => captor.toString());
-        // user.predict(controledRobot, data);
         user.predictDecisionTree(controledRobot, user.captors.state[controledRobot]);
       }
     }, 1000);
@@ -147,20 +143,13 @@ const App = observer(() => {
   }
 
   const onTrain = async (data: { action: string; captors: number[] }[]) => {
-    // Train with tensorflow
-    // await user.trainDecisionTree(data);
-
     // Train with sklearn
     var response = await user.trainDecisionTreeSklearn(data);
-
     // Convert the response to JSON and store it in the treeData
     var tree = [JSON.parse(response)];
     setTreeData(tree);
-
     // Set the renderTree to true
     setRenderTree(true);
-
-    console.log('Tree:', treeData);
   }
 
   const onPredict = async () => {
@@ -174,10 +163,6 @@ const App = observer(() => {
   const onStop = async () => {
     setMode('TRAIN');
     await user.emitMotorEvent(controledRobot, 'STOP');
-  }
-
-  const onTest = () => {
-    
   }
 
 

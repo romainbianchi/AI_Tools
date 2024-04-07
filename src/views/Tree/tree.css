@@ -57,15 +57,15 @@
     width: 0; height: 20px;
 }
 .tree li div{
-    border: 1px solid #ccc;
+    border: 3px solid #ccc;
     padding: 5px 60px;
     text-decoration: none;
     color: #666;
     font-family: arial, verdana, tahoma;
-    font-size: 11px;
+    font-size: 20px;
     display: inline-block;
     
-    border-radius: 5px;
+    border-radius: 10px;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     

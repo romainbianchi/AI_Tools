@@ -107,11 +107,8 @@ def train_model_sklearn():
 
     # convert model to json and save in a file
     tree_str = tree_to_json(clf, X.columns, actions)
-    # with open('model.json', 'w') as f:
-    #     f.write(tree_str)
 
     # Send back a response
-    response_data = {'message': 'TrainSkLearn'}
     return jsonify(tree_str), 200
 
 
