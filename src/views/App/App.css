@@ -110,10 +110,13 @@
   height: 100%;
 }
 
-.treeNode {
-  position: relative;
-}
-
-.treeNode > .childNode {
+.modeButtons {
+  /* buttons on top left of the screen */
   position: absolute;
+  top: 0;
+  left: 0;
+  padding: 3em;
+  display: flex;
+  gap: 1em;
+  height: 40px;
 }

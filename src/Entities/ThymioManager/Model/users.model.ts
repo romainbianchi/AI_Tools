@@ -12,6 +12,6 @@ export interface Users {
   emitAction: (uuid: string, action: string, args: number[]) => Promise<void>;
   emitMotorEvent: (uuid: string, action: string) => Promise<void>;
   trainDecisionTree: (data: { action: string; captors: number[] }[]) => Promise<void>;
-  trainDecisionTreeSklearn: (data: { action: string; captors: number[] }[]) => Promise<void>;
+  trainDecisionTreeSklearn: (data: { action: string; captors: number[] }[]) => Promise<string>;
   predictDecisionTree: (uuid: string, captors: number[]) => Promise<void>;
 }

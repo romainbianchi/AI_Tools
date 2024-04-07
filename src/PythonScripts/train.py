@@ -7,6 +7,7 @@ import tensorflow as tf
 import tensorflow_decision_forests as tfdf
 from sklearn import tree
 
+from helpers import tree_to_json
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"*": {"origins": "*"}})
@@ -102,9 +103,16 @@ def train_model_sklearn():
 
     model = clf
 
+    actions = df['action'].unique()
+
+    # convert model to json and save in a file
+    tree_str = tree_to_json(clf, X.columns, actions)
+    # with open('model.json', 'w') as f:
+    #     f.write(tree_str)
+
     # Send back a response
     response_data = {'message': 'TrainSkLearn'}
-    return jsonify(response_data), 200
+    return jsonify(tree_str), 200
 
 
 

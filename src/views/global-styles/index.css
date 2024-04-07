@@ -40,10 +40,10 @@ p {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
-  position: absolute;
+  /* position: absolute;
   top: 55px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 50%; */
+  /* transform: translateX(-50%); */
 }
 
 button {

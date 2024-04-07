@@ -1,36 +1,61 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import './App.css';
+import '../Tree/tree.css';
 import { thymioManagerFactory } from '../../Entities/ThymioManager';
 import { observer } from 'mobx-react';
 import { set } from 'mobx';
 import { string } from '@tensorflow/tfjs';
+import { emit } from 'xstate';
 
 const user = thymioManagerFactory({ user: 'AllUser', activity: 'ThymioIA', hosts: ['localhost'] });
 
+/* adapted from React-Node-Flow: https://github.com/kumarabhishek008/React-Node-Flow/tree/master */
+const treeRendering = (treeData: any) => {
+    
+  return (
+      <>
+              <ul>
+          {
+              treeData.map((item: any)=>                
+                  <li className={item.text+item.id}>
+                      <div>{ item.text}</div>
+                      {
+                          item.children && item.children.length ?
+                          treeRendering(item.children)
+                          :''
+                      }
+                  </li>
+              )            
+              
+          }
+          </ul>
+      </>
+  )
+}
+
+
 const App = observer(() => {
 
-  // State
+
+  // ----------------- States -----------------
+  const [appState, setAppState] = useState<string>('AI'); // State of the app
   const [robots, setRobots] = useState<string[]>([]);
   const [controledRobot, setControledRobot] = useState<string>('');
-  const [trainer, setTrainer] = useState<{ uuid: string; action: string; captors: number[] }[]>([]);
   // Store the data for the training
   const [data, setData] = useState<{ action: string; captors: number[] }[]>([]);
 
-  // Store training result
-  const [trainingResult, setTrainingResult] = useState<string>('');
-
   const [mode, setMode] = useState<'TRAIN' | 'PREDICT'>('TRAIN');
   const [conditions, setConditions] = useState<string[]>(['Condition 1', 'condition 2', 'Condition 3', 'Condition 4', 'Conditon 5', 'Condition 6', 'Condition 7']); // List of conditions
-  const [action, setAction] = useState<string>('STOP'); // Selected action
   const [actions, setActions] = useState<string[]>(['FORWARD', 'BACKWARD', 'LEFT', 'RIGHT', 'STOP']); // List of actions
 
   // Tree elements
-  // const [treeElements, setTreeElements] = useState<string[]>([]); // List of elements in the tree
-  // State to hold objects with both the element and its type
   const [treeElements, setTreeElements] = useState<{ name: string; type: string }[]>([]);
   const [treeConections, setTreeConnections] = useState<{ from: string, to: string }[]>([]); // List of connections between elements in the tree
+  const [RenderTree, setRenderTree] = useState<boolean>(false);
+  const [treeData, setTreeData] = useState<any>();
 
-  // Comportemebts
+
+  // ----------------- Functions -----------------
   const onClickGetRobots = async () => {
     const _robots = await user.getRobotsUuids();
     setRobots(_robots);
@@ -41,18 +66,7 @@ const App = observer(() => {
     setControledRobot(robotUuid);
   };
 
-  const onAction = async (action: string) => {
-    setTrainer([...trainer, { uuid: controledRobot, action, captors: user.captors.state[controledRobot] }]);
-    await user.emitMotorEvent(controledRobot, action);
-  };
-
   const onExecute = async () => {
-    const data = trainer.map(({ action, captors }) => ({
-      input: captors.map(captor => captor.toString()),
-      output: action,
-    }));
-
-    // await user.trainModel(data);
     setMode('PREDICT');
   };
 
@@ -137,107 +151,191 @@ const App = observer(() => {
     // await user.trainDecisionTree(data);
 
     // Train with sklearn
-    await user.trainDecisionTreeSklearn(data);
-    
-    // Set the training result
-    setTrainingResult('Training completed!');
+    var response = await user.trainDecisionTreeSklearn(data);
+
+    // Convert the response to JSON and store it in the treeData
+    var tree = [JSON.parse(response)];
+    setTreeData(tree);
+
+    // Set the renderTree to true
+    setRenderTree(true);
+
+    console.log('Tree:', treeData);
   }
 
   const onPredict = async () => {
     await user.predictDecisionTree(controledRobot, user.captors.state[controledRobot]);
   }
 
+  const onClear = () => {
+    setData([]);
+  }
 
-  // Render
+  const onStop = async () => {
+    setMode('TRAIN');
+    await user.emitMotorEvent(controledRobot, 'STOP');
+  }
+
+  const onTest = () => {
+    
+  }
+
+
+  // ----------------- Render -----------------
   return (
     <>
       <h1>DecisionTree</h1>
-      
-      {/* Apply chosen action */}
-      <button onClick={() => onAction(action)}>MOVE</button>
 
-      {/* start the training */}
-      <button onClick={() => onTrain(data)}>Train</button>
-
-      {/* Make perdiction */}
-      <button onClick={() => onPredict()}>Predict</button>
-
-      {/* Execute */}
-      <button onClick={() => onExecute()}>Execute</button>
-
-      {/* Display the data collected on screen */}
-      <pre>{JSON.stringify(data, null)}</pre>
-
-      {/* Robot is not connected yet */}
       {controledRobot == '' ? (
-        <>
-        <div className="card">
-          <button onClick={onClickGetRobots}>getRobots</button>
-        </div>
+        // Robot is not connected
 
-        {robots.map((robot, index) => (
-          <div key={index} className="card">
-            <button onClick={() => onSelectRobot(robot)}>
-              <p>{robot}</p>
-            </button>
+        <>
+          <div className="card">
+            <button onClick={onClickGetRobots}>getRobots</button>
           </div>
-        ))}
-      </>
 
-      // Robot connected
+          {robots.map((robot, index) => (
+            <div key={index} className="card">
+              <button onClick={() => onSelectRobot(robot)}>
+                <p>{robot}</p>
+              </button>
+            </div>
+          ))}
+
+        </>
+
       ) : (
-        <>
-          <div className="container">
+        // Robot is connected
 
-            {/* left columns */}
-            <div className="column">
-              <div className="leftColumnBox">
-                <div className='targetBox' onDrop={(e) => handleOnDrop(e, 'target')} onDragOver={handleOnDragOver}>Drop Area
-                  <div className='grid'>
-                    {treeElements.map((element, index) => (
-                      <div key={index} draggable="true" className='draggableBox' onDragStart={(e) => handleOnDrag(e, element.type, element.name)}>{element.name}</div>
-                    ))}
+        appState == 'Manual' ? (
+          // App state is Manual
+
+          <>
+            <div className="modeButtons">
+              <button onClick={() => setAppState('AI')}>AI</button>
+              <button onClick={() => setAppState('Manual')}>Manual</button>
+            </div>
+
+            <div className="container">
+
+              {/* left columns */}
+              <div className="column">
+                <div className="leftColumnBox">
+                  <div className='targetBox' onDrop={(e) => handleOnDrop(e, 'target')} onDragOver={handleOnDragOver}>Drop Area
+                    <div className='grid'>
+                      {treeElements.map((element, index) => (
+                        <div key={index} draggable="true" className='draggableBox' onDragStart={(e) => handleOnDrag(e, element.type, element.name)}>{element.name}</div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
+
+
+              {/* right columns */}
+              <div className="column">
+                  
+                {/* Box for conditions */}
+                <div className="rightColumnBox">
+                  <h2>Conditions</h2>
+                  <div className="grid" onDrop={(e) => handleOnDrop(e, 'initial')} onDragOver={handleOnDragOver}>
+                    {/* Remaining conditions in the right column */}
+                    {conditions.map((condition, index) => (
+                      <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'condition', condition)}>{condition}</div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Box for actions */}
+                <div className="rightColumnBox">
+                  <h2>Actions</h2>
+                  <div className="grid" onDrop={(e) => handleOnDrop(e, 'initial')} onDragOver={handleOnDragOver}>
+                    {/* Remaining actions in the right column */}
+                    {actions.map((action, index) => (
+                      <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'action', action)}>{action}</div>
+                    ))}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </>
+
+        ) : (
+          // App state is AI
+
+          <>
+            <div className="modeButtons">
+              <button onClick={() => setAppState('AI')}>AI</button>
+              <button onClick={() => setAppState('Manual')}>Manual</button>
             </div>
 
-
-            {/* right columns */}
-            <div className="column">
-                
-              {/* Box for conditions */}
-              <div className="rightColumnBox">
-                <h2>Conditions</h2>
-                <div className="grid" onDrop={(e) => handleOnDrop(e, 'initial')} onDragOver={handleOnDragOver}>
-                  {/* Remaining conditions in the right column */}
-                  {conditions.map((condition, index) => (
-                    <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'condition', condition)}>{condition}</div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Box for actions */}
-              <div className="rightColumnBox">
-                <h2>Actions</h2>
-                <div className="grid" onDrop={(e) => handleOnDrop(e, 'initial')} onDragOver={handleOnDragOver}>
-                  {/* Remaining actions in the right column */}
-                  {actions.map((action, index) => (
-                    <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'action', action)}>{action}</div>
-                  ))}
-                </div>
-                <div className='grid'>
-                  <button onClick={() => handleClickAction('FORWARD')}>FORWARD</button>
-                  <button onClick={() => handleClickAction('BACKWARD')}>BACKWARD</button>
-                  <button onClick={() => handleClickAction('LEFT')}>LEFT</button>
-                  <button onClick={() => handleClickAction('RIGHT')}>RIGHT</button>
-                  <button onClick={() => handleClickAction('STOP')}>STOP</button>
-                </div>
-              </div>
-
+            {/* Training Buttons */}
+            <div style = {{padding: '2rem',}}>
+              <button onClick={() => onTrain(data)}>Train</button>
+              <button onClick={() => onPredict()}>Predict</button>
+              <button onClick={() => onExecute()}>Execute</button>
+              <button onClick={() => onClear()}>Clear</button>
+              <button onClick={() => onStop()}>Stop</button>
+              <button onClick={() => onTest()}>Test</button>
             </div>
-          </div>
-        </>
+
+            {/* Action Buttons */}
+            <button onClick={() => handleClickAction('FORWARD')}>FORWARD</button>
+            <button onClick={() => handleClickAction('BACKWARD')}>BACKWARD</button>
+            <button onClick={() => handleClickAction('LEFT')}>LEFT</button>
+            <button onClick={() => handleClickAction('RIGHT')}>RIGHT</button>
+            <button onClick={() => handleClickAction('STOP')}>STOP</button>
+            
+            {/* Display training data collected */}
+            <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexDirection: 'column',
+              width: '100%',
+            }}
+            >
+              {data.map(({ action, captors }, index) => (
+                <div
+                  key={index}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    width: '250px',
+                    height: '1.2rem',
+                  }}
+                >
+                  <p>{action}</p>
+                  <pre>{JSON.stringify(captors, null)}</pre>
+                </div>
+              ))}
+            </div>
+
+            {/* Display the tree */}
+            {RenderTree && (
+              <div className='tree'
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexDirection: 'column',
+                  width: '100%',
+                }}
+              >
+                <h2>Tree</h2>
+                <div className='tree'>
+                  {treeRendering(treeData)}
+                </div>
+              </div>
+            )}
+
+          </>
+
+        )
+
       )}
     </>
   );
