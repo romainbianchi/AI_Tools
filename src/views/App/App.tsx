@@ -41,6 +41,7 @@ const App = observer(() => {
   const [appState, setAppState] = useState<string>('AI'); // State of the app
   const [robots, setRobots] = useState<string[]>([]);
   const [controledRobot, setControledRobot] = useState<string>('');
+  const [withoutRobot, setwithoutRobot] = useState<boolean>(false); // Used to develop without the robot
   // Store the data for the training
   const [data, setData] = useState<{ action: string; captors: number[] }[]>([]);
 
@@ -171,10 +172,13 @@ const App = observer(() => {
     <>
       <h1>Decision Tree</h1>
 
-      {controledRobot == '' ? (
+      {(controledRobot == '' && !withoutRobot) ? (
         // Robot is not connected
 
         <>
+
+          <button onClick={() => setwithoutRobot(true)}>Without Robot</button>
+
           <div className="card">
             <button onClick={onClickGetRobots}>getRobots</button>
           </div>
