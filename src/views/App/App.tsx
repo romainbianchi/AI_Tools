@@ -33,6 +33,40 @@ const treeRendering = (treeData: any) => {
   )
 }
 
+const manualTreeRendering = (ManualTreeData: any, handleOnDrop:(e:React.DragEvent, dropAreaType:string) => void) => {
+
+  return (
+    <>
+        <ul>
+        {
+            ManualTreeData.map((item: any)=>                
+                <li className={item.text+item.id}>
+                    <div onDrop={(e) => handleOnDrop(e, 'target')} onDragOver={(e) => e.preventDefault()}>{ item.text}</div>
+                    {
+                        item.children && item.children.length ?
+                        manualTreeRendering(item.children, handleOnDrop)
+                        :''
+                    }
+                </li>
+            )            
+            
+        }
+        </ul>
+    </>
+)
+}
+
+
+// Empty tree to be displayed when manual tree is empty
+const emptyEmptyOnceCellTree = [
+  {
+    id:1,
+    diamond:false,
+    text:'drop condition or action here',
+    children:[]
+  }
+]
+
 
 const App = observer(() => {
 
@@ -53,7 +87,8 @@ const App = observer(() => {
   const [treeElements, setTreeElements] = useState<{ name: string; type: string }[]>([]);
   const [treeConections, setTreeConnections] = useState<{ from: string, to: string }[]>([]); // List of connections between elements in the tree
   const [RenderTree, setRenderTree] = useState<boolean>(false);
-  const [treeData, setTreeData] = useState<any>();
+  const [treeData, setTreeData] = useState<any>(); //Data of the trained tree
+  const [manualTreeData, setManualTreeData] = useState<any>(emptyEmptyOnceCellTree); //Data of the manually created tree
 
 
   // ----------------- Functions -----------------
@@ -218,6 +253,9 @@ const App = observer(() => {
                     </div>
                   </div>
                 </div>
+                <div className='tree'>
+                  {manualTreeRendering(manualTreeData, handleOnDrop)}
+                </div>
               </div>
 
 
@@ -245,7 +283,6 @@ const App = observer(() => {
                     ))}
                   </div>
                 </div>
-
               </div>
             </div>
           </>
