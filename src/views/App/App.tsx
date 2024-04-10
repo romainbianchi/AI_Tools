@@ -14,7 +14,7 @@ const treeRendering = (treeData: any) => {
     
   return (
       <>
-              <ul>
+        <ul>
           {
               treeData.map((item: any)=>                
                   <li className={item.text+item.id}>
@@ -33,18 +33,18 @@ const treeRendering = (treeData: any) => {
   )
 }
 
-const manualTreeRendering = (ManualTreeData: any, handleOnDrop:(e:React.DragEvent, dropAreaType:string) => void) => {
+const manualTreeRendering = (ManualTreeData: any, handleOnDropInTree:(e:React.DragEvent) => void) => {
 
   return (
     <>
         <ul>
         {
-            ManualTreeData.map((item: any)=>                
+            ManualTreeData.map((item: any)=>
                 <li className={item.text+item.id}>
-                    <div onDrop={(e) => handleOnDrop(e, 'target')} onDragOver={(e) => e.preventDefault()}>{ item.text}</div>
+                    <div data-id={item.id} onDrop={(e) => handleOnDropInTree(e)} onDragOver={(e) => e.preventDefault()}>{item.text}</div>
                     {
                         item.children && item.children.length ?
-                        manualTreeRendering(item.children, handleOnDrop)
+                        manualTreeRendering(item.children, handleOnDropInTree)
                         :''
                     }
                 </li>
@@ -53,8 +53,8 @@ const manualTreeRendering = (ManualTreeData: any, handleOnDrop:(e:React.DragEven
         }
         </ul>
     </>
-)
-}
+  )
+} 
 
 
 // Empty tree to be displayed when manual tree is empty
@@ -167,6 +167,56 @@ const App = observer(() => {
     }
   }
 
+  const handleOnDropInTree = (e: React.DragEvent) => {
+
+    // Get id of the drop area
+    const dropAreaId = e.currentTarget.getAttribute('data-id');
+    // Get data of the dropped element
+    const droppedData = e.dataTransfer.getData('draggedData');
+    const { type, name } = JSON.parse(droppedData);
+
+    // Change the text in the dropped area according to the dropped element  by changing the state
+    const newManualTreeData = manualTreeData.map((item: any) => {
+      if (item.id == dropAreaId) {
+        return {
+          ...item,
+          text: name,
+        };
+      } else {
+        return item;
+      }
+    });
+
+    // If the droped element is a condition add two empty children to the dropped area
+    if (type === 'condition') {
+      newManualTreeData.map((item: any) => {
+        if (item.id == dropAreaId) {
+          item.children = [
+            {
+              id: item.id + 1,
+              diamond: false,
+              text: 'drop condition or action here',
+              children: []
+            }
+          ]
+        }
+      });
+    }
+
+    // If the dropped element is an action remove all the children of the dropped area
+    if (type === 'action') {
+      newManualTreeData.map((item: any) => {
+        if (item.id == dropAreaId) {
+          item.children = []
+        }
+      });
+    }
+
+    // Update the state
+    setManualTreeData(newManualTreeData);
+
+  }
+
   const handleOnDragOver = (e: React.DragEvent) => {
     e.preventDefault();
   }
@@ -254,7 +304,7 @@ const App = observer(() => {
                   </div>
                 </div>
                 <div className='tree'>
-                  {manualTreeRendering(manualTreeData, handleOnDrop)}
+                  {manualTreeRendering(manualTreeData, handleOnDropInTree)}
                 </div>
               </div>
 
