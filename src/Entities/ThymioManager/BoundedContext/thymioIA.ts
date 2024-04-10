@@ -160,10 +160,10 @@ export class ThymioIA implements IThymioIA {
         this.emitAction(uuid, 'M_motors', [-100, -100]);
         break;
       case 'RIGHT':
-        this.emitAction(uuid, 'M_motors', [-100, 100]);
+        this.emitAction(uuid, 'M_motors', [100, -100]);
         break;
       case 'LEFT':
-        this.emitAction(uuid, 'M_motors', [100, -100]);
+        this.emitAction(uuid, 'M_motors', [-100, 100]);
         break;
 
       default:

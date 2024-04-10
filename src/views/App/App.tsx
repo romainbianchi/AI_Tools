@@ -169,7 +169,7 @@ const App = observer(() => {
   // ----------------- Render -----------------
   return (
     <>
-      <h1>DecisionTree</h1>
+      <h1>Decision Tree</h1>
 
       {controledRobot == '' ? (
         // Robot is not connected
@@ -262,15 +262,17 @@ const App = observer(() => {
               <button onClick={() => onExecute()}>Execute</button>
               <button onClick={() => onClear()}>Clear</button>
               <button onClick={() => onStop()}>Stop</button>
-              <button onClick={() => onTest()}>Test</button>
             </div>
 
             {/* Action Buttons */}
-            <button onClick={() => handleClickAction('FORWARD')}>FORWARD</button>
-            <button onClick={() => handleClickAction('BACKWARD')}>BACKWARD</button>
-            <button onClick={() => handleClickAction('LEFT')}>LEFT</button>
-            <button onClick={() => handleClickAction('RIGHT')}>RIGHT</button>
-            <button onClick={() => handleClickAction('STOP')}>STOP</button>
+            <div style = {{padding: '2rem',}}>
+              <button onClick={() => handleClickAction('FORWARD')}>FORWARD</button>
+              <button onClick={() => handleClickAction('BACKWARD')}>BACKWARD</button>
+              <button onClick={() => handleClickAction('LEFT')}>LEFT</button>
+              <button onClick={() => handleClickAction('RIGHT')}>RIGHT</button>
+              <button onClick={() => handleClickAction('STOP')}>STOP</button>
+            </div>
+
             
             {/* Display training data collected */}
             <div
