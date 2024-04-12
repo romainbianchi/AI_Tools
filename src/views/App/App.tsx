@@ -4,7 +4,7 @@ import '../Tree/tree.css';
 import { thymioManagerFactory } from '../../Entities/ThymioManager';
 import { observer } from 'mobx-react';
 import { set } from 'mobx';
-import { string } from '@tensorflow/tfjs';
+import { max, string } from '@tensorflow/tfjs';
 import { emit } from 'xstate';
 
 const user = thymioManagerFactory({ user: 'AllUser', activity: 'ThymioIA', hosts: ['localhost'] });
@@ -40,7 +40,7 @@ const manualTreeRendering = (ManualTreeData: any, handleOnDropInTree:(e:React.Dr
         <ul>
         {
             ManualTreeData.map((item: any)=>
-                <li className={item.text+item.id}>
+                <li key={item.id} className={item.text+item.id}>
                     <div data-id={item.id} onDrop={(e) => handleOnDropInTree(e)} onDragOver={(e) => e.preventDefault()}>{item.text}</div>
                     {
                         item.children && item.children.length ?
@@ -72,7 +72,7 @@ const App = observer(() => {
 
 
   // ----------------- States -----------------
-  const [appState, setAppState] = useState<string>('AI'); // State of the app
+  const [appState, setAppState] = useState<string>('Manual'); // State of the app
   const [robots, setRobots] = useState<string[]>([]);
   const [controledRobot, setControledRobot] = useState<string>('');
   const [withoutRobot, setwithoutRobot] = useState<boolean>(false); // Used to develop without the robot
@@ -89,6 +89,7 @@ const App = observer(() => {
   const [RenderTree, setRenderTree] = useState<boolean>(false);
   const [treeData, setTreeData] = useState<any>(); //Data of the trained tree
   const [manualTreeData, setManualTreeData] = useState<any>(emptyEmptyOnceCellTree); //Data of the manually created tree
+  const [maxId, setMaxId] = useState(1); // Maximum id of the manual tree elements, allows to create unique ids for each element
 
 
   // ----------------- Functions -----------------
@@ -178,42 +179,96 @@ const App = observer(() => {
     // Change the text in the dropped area according to the dropped element  by changing the state
     const newManualTreeData = manualTreeData.map((item: any) => {
       if (item.id == dropAreaId) {
-        return {
-          ...item,
-          text: name,
-        };
+        if (type === 'action'){
+          return {
+            // no children if the dropped element is an action
+            ...item,
+            text: name,
+            children: []
+          };
+        } else {
+          // increment the maxId by 2
+          const newMaxId = maxId + 2;
+          setMaxId(newMaxId);
+          return {
+            ...item,
+            text: name,
+            // set two children if the dropped element is a condition
+            children:[
+              {
+                id: newMaxId+1,
+                diamond: false,
+                text: 'child 1',
+                children: []
+              }, 
+              {
+                id: newMaxId+2,
+                diamond: false,
+                text: 'child 1',
+                children: []
+              }
+            ]
+          }
+        }
       } else {
-        return item;
+        return {
+          ...item, 
+          children: updateChildren(item, type, name, dropAreaId)
+        }
       }
     });
 
-    // If the droped element is a condition add two empty children to the dropped area
-    if (type === 'condition') {
-      newManualTreeData.map((item: any) => {
-        if (item.id == dropAreaId) {
-          item.children = [
-            {
-              id: item.id + 1,
-              diamond: false,
-              text: 'drop condition or action here',
-              children: []
-            }
-          ]
-        }
-      });
-    }
-
-    // If the dropped element is an action remove all the children of the dropped area
-    if (type === 'action') {
-      newManualTreeData.map((item: any) => {
-        if (item.id == dropAreaId) {
-          item.children = []
-        }
-      });
-    }
-
     // Update the state
     setManualTreeData(newManualTreeData);
+
+  }
+
+  // helper function to recursively update the children in the tree
+  const updateChildren = (item:any, type:string, name:string, dropAreaId:string|null) => {
+
+    const newChildren = item.children.map((child: any) => {
+      if (child.id == dropAreaId) {
+        if(type === 'action'){
+          return {
+            // no children if the dropped element is an action
+            ...child,
+            text: name,
+            children: []
+          };
+        } else {
+          // increment the maxId by 2
+          const newMaxId = maxId + 2;
+          setMaxId(newMaxId);
+          // set two children if the dropped element is a condition
+          return {
+            ...child,
+            text: name,
+            // set two children if the dropped element is a condition
+            children:[
+              {
+                id: newMaxId+1,
+                diamond: false,
+                text: 'child 1',
+                children: []
+              }, 
+              {
+                id: newMaxId+2,
+                diamond: false,
+                text: 'child 1',
+                children: []
+              }
+            ]
+          }
+        }
+      } else {
+        return {
+          ...child, 
+          children: updateChildren(child, type, name, dropAreaId)
+        }
+      }
+    })
+
+    return newChildren;
 
   }
 
@@ -303,9 +358,6 @@ const App = observer(() => {
                     </div>
                   </div>
                 </div>
-                <div className='tree'>
-                  {manualTreeRendering(manualTreeData, handleOnDropInTree)}
-                </div>
               </div>
 
 
@@ -334,6 +386,9 @@ const App = observer(() => {
                   </div>
                 </div>
               </div>
+            </div>
+            <div className='tree'>
+                  {manualTreeRendering(manualTreeData, handleOnDropInTree)}
             </div>
           </>
 
