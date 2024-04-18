@@ -30,6 +30,7 @@ const emptyEmptyOnceCellTree = [
     {
       id:1,
       diamond:false,
+      condTab: [],
       text:'drop condition or action here',
       children:[]
     }
@@ -52,57 +53,62 @@ const TreeManual = () => {
         const dropAreaId = e.currentTarget.getAttribute('data-id');
         // Get data of the dropped element
         const droppedData = e.dataTransfer.getData('draggedData');
-        const { type, name } = JSON.parse(droppedData);
+        const { type, name, condTab } = JSON.parse(droppedData);
 
         // Change the text in the dropped area according to the dropped element  by changing the state
         const newManualTreeData = manualTreeData.map((item: any) => {
-        if (item.id == dropAreaId) {
-            if (type === 'action'){
-            return {
-                // no children if the dropped element is an action
-                ...item,
-                text: name,
-                children: []
-            };
-            } else {
-            // increment the maxId by 2
-            const newMaxId = maxId + 2;
-            setMaxId(newMaxId);
-            return {
-                ...item,
-                text: name,
-                // set two children if the dropped element is a condition
-                children:[
-                {
-                    id: newMaxId+1,
-                    diamond: false,
-                    text: 'child 1',
-                    children: []
-                }, 
-                {
-                    id: newMaxId+2,
-                    diamond: false,
-                    text: 'child 1',
-                    children: []
+            if (item.id == dropAreaId) {
+                if (type === 'action'){
+                    return {
+                        // no children if the dropped element is an action
+                        ...item,
+                        text: name,
+                        children: []
+                    };
+                } else {
+                // increment the maxId by 2
+                const newMaxId = maxId + 2;
+                setMaxId(newMaxId);
+                    return {
+                        ...item,
+                        text: name,
+                        condTab: condTab,
+                        // set two children if the dropped element is a condition
+                        children:[
+                        {
+                            id: newMaxId+1,
+                            diamond: false,
+                            condTab: [],
+                            text: 'drop action or condition',
+                            children: []
+                        }, 
+                        {
+                            id: newMaxId+2,
+                            diamond: false,
+                            condTab: [],
+                            text: 'drop action or condition',
+                            children: []
+                        }
+                        ]
+                    }
                 }
-                ]
+            } else {
+                return {
+                ...item, 
+                children: updateChildren(item, type, name, dropAreaId, condTab)
+                }
             }
-            }
-        } else {
-            return {
-            ...item, 
-            children: updateChildren(item, type, name, dropAreaId)
-            }
-        }
         });
 
         // Update the state
         setManualTreeData(newManualTreeData);
 
+        console.log('manualTreeData:', newManualTreeData)
+
     }
 
     // helper function to recursively update the children in the tree
-    const updateChildren = (item:any, type:string, name:string, dropAreaId:string|null) => {
+    const updateChildren = (item:any, type:string, name:string, dropAreaId:string|null, condTab:any[]) => {
 
         const newChildren = item.children.map((child: any) => {
         if (child.id == dropAreaId) {
@@ -121,18 +127,21 @@ const TreeManual = () => {
             return {
                 ...child,
                 text: name,
+                condTab: condTab,
                 // set two children if the dropped element is a condition
                 children:[
                 {
                     id: newMaxId+1,
                     diamond: false,
-                    text: 'child 1',
+                    condTab: [],
+                    text: 'drop action or condition',
                     children: []
                 }, 
                 {
                     id: newMaxId+2,
                     diamond: false,
-                    text: 'child 1',
+                    condTab: [],
+                    text: 'drop action or condition',
                     children: []
                 }
                 ]
@@ -141,7 +150,7 @@ const TreeManual = () => {
         } else {
             return {
             ...child, 
-            children: updateChildren(child, type, name, dropAreaId)
+            children: updateChildren(child, type, name, dropAreaId, condTab)
             }
         }
         })

@@ -14,6 +14,17 @@ import TreeManual from '../Tree/TreeManual';
 
 const user = thymioManagerFactory({ user: 'AllUser', activity: 'ThymioIA', hosts: ['localhost'] });
 
+// table of condition and corresponding sensor values
+const cond = [
+  {name: 'sensor0', tab: [1,1,1,0,0,0,0,0,0]},
+  {name: 'sensor1', tab: [1,1,0,1,0,0,0,0,0]},
+  {name: 'sensor2', tab: [1,1,0,0,1,0,0,0,0]},
+  {name: 'sensor3', tab: [1,1,0,0,0,1,0,0,0]},
+  {name: 'sensor4', tab: [1,1,0,0,0,0,1,0,0]},
+  {name: 'sensor5', tab: [1,1,0,0,0,0,0,1,0]},
+  {name: 'sensor6', tab: [1,1,0,0,0,0,0,0,1]},
+];
+
 const App = observer(() => {
 
 
@@ -25,14 +36,17 @@ const App = observer(() => {
   // Store the data for the training
   const [data, setData] = useState<{ action: string; captors: number[] }[]>([]);
 
-  const [mode, setMode] = useState<'TRAIN' | 'PREDICT'>('TRAIN');
-  const [conditions, setConditions] = useState<string[]>(['Condition 1', 'condition 2', 'Condition 3', 'Condition 4', 'Conditon 5', 'Condition 6', 'Condition 7']); // List of conditions
+  const [mode, setMode] = useState<'TRAIN' | 'PREDICT' | 'MANUALCONTROL'>('TRAIN');
+  const [conditions, setConditions] = useState<any[]>(cond); // List of conditions
   const [actions, setActions] = useState<string[]>(['FORWARD', 'BACKWARD', 'LEFT', 'RIGHT', 'STOP']); // List of actions
 
   // Tree elements (Tree using AI)
   const [treeElements, setTreeElements] = useState<{ name: string; type: string }[]>([]);
   const [renderTree, setRenderTree] = useState<boolean>(false);
   const [treeData, setTreeData] = useState<any>(); //Data of the trained tree
+
+  // Look-up table for control with manual tree
+  const [lookUpTable, setLookUpTable] = useState<any>({});
 
 
   // ----------------- Functions -----------------
@@ -68,8 +82,8 @@ const App = observer(() => {
 
 
   // Drag and Drop
-  const handleOnDrag = (e:React.DragEvent, type: string, name: string) => {
-    const data = JSON.stringify({ type, name });
+  const handleOnDrag = (e:React.DragEvent, type: string, name: string, condTab: any[]) => {
+    const data = JSON.stringify({ type, name, condTab });
     e.dataTransfer.setData('draggedData', data);
   }
 
@@ -197,7 +211,7 @@ const App = observer(() => {
                   <div className='targetBox' onDrop={(e) => handleOnDrop(e, 'target')} onDragOver={handleOnDragOver}>Drop Area
                     <div className='grid'>
                       {treeElements.map((element, index) => (
-                        <div key={index} draggable="true" className='draggableBox' onDragStart={(e) => handleOnDrag(e, element.type, element.name)}>{element.name}</div>
+                        <div key={index} draggable="true" className='draggableBox' onDragStart={(e) => handleOnDrag(e, element.type, element.name, [])}>{element.name}</div>
                       ))}
                     </div>
                   </div>
@@ -214,7 +228,7 @@ const App = observer(() => {
                   <div className="grid" onDrop={(e) => handleOnDrop(e, 'initial')} onDragOver={handleOnDragOver}>
                     {/* Remaining conditions in the right column */}
                     {conditions.map((condition, index) => (
-                      <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'condition', condition)}>{condition}</div>
+                      <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'condition', condition.name, condition.tab)}>{condition.name}</div>
                     ))}
                   </div>
                 </div>
@@ -225,7 +239,7 @@ const App = observer(() => {
                   <div className="grid" onDrop={(e) => handleOnDrop(e, 'initial')} onDragOver={handleOnDragOver}>
                     {/* Remaining actions in the right column */}
                     {actions.map((action, index) => (
-                      <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'action', action)}>{action}</div>
+                      <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'action', action, [])}>{action}</div>
                     ))}
                   </div>
                 </div>
