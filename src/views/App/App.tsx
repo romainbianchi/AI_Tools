@@ -8,40 +8,17 @@ import { max, string } from '@tensorflow/tfjs';
 import { emit } from 'xstate';
 
 // components
-import ManualTree from '../Tree/ManualTree';
+import ManualTree from '../Tree/TreeManual';
+import TreeAI from '../Tree/TreeAI';
+import TreeManual from '../Tree/TreeManual';
 
 const user = thymioManagerFactory({ user: 'AllUser', activity: 'ThymioIA', hosts: ['localhost'] });
-
-/* adapted from React-Node-Flow: https://github.com/kumarabhishek008/React-Node-Flow/tree/master */
-const treeRendering = (treeData: any) => {
-    
-  return (
-      <>
-        <ul>
-          {
-              treeData.map((item: any)=>                
-                  <li className={item.text+item.id}>
-                      <div>{ item.text}</div>
-                      {
-                          item.children && item.children.length ?
-                          treeRendering(item.children)
-                          :''
-                      }
-                  </li>
-              )            
-              
-          }
-          </ul>
-      </>
-  )
-}
-
 
 const App = observer(() => {
 
 
   // ----------------- States -----------------
-  const [appState, setAppState] = useState<string>('Manual'); // State of the app
+  const [appState, setAppState] = useState<string>('AI'); // State of the app
   const [robots, setRobots] = useState<string[]>([]);
   const [controledRobot, setControledRobot] = useState<string>('');
   const [withoutRobot, setwithoutRobot] = useState<boolean>(false); // Used to develop without the robot
@@ -52,9 +29,9 @@ const App = observer(() => {
   const [conditions, setConditions] = useState<string[]>(['Condition 1', 'condition 2', 'Condition 3', 'Condition 4', 'Conditon 5', 'Condition 6', 'Condition 7']); // List of conditions
   const [actions, setActions] = useState<string[]>(['FORWARD', 'BACKWARD', 'LEFT', 'RIGHT', 'STOP']); // List of actions
 
-  // Tree elements
+  // Tree elements (Tree using AI)
   const [treeElements, setTreeElements] = useState<{ name: string; type: string }[]>([]);
-  const [RenderTree, setRenderTree] = useState<boolean>(false);
+  const [renderTree, setRenderTree] = useState<boolean>(false);
   const [treeData, setTreeData] = useState<any>(); //Data of the trained tree
 
 
@@ -161,6 +138,7 @@ const App = observer(() => {
 
   const onClear = () => {
     setData([]);
+    setRenderTree(false);
   }
 
   const onStop = async () => {
@@ -203,7 +181,7 @@ const App = observer(() => {
 
           <>
             {/* Add tree visualization */}
-            <ManualTree />
+            <TreeManual/>
 
             {/* Mode buttons */}
             <div className="modeButtons">
@@ -311,22 +289,7 @@ const App = observer(() => {
             </div>
 
             {/* Display the tree */}
-            {RenderTree && (
-              <div className='tree'
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexDirection: 'column',
-                  width: '100%',
-                }}
-              >
-                <h2>Tree</h2>
-                <div className='tree'>
-                  {treeRendering(treeData)}
-                </div>
-              </div>
-            )}
+            <TreeAI data={treeData} renderTree={renderTree} />
 
           </>
 

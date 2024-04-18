@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import './tree.css';
 
+/* adapted from React-Node-Flow: https://github.com/kumarabhishek008/React-Node-Flow/tree/master */
 const manualTreeRendering = (ManualTreeData: any, handleOnDropInTree:(e:React.DragEvent) => void) => {
 
     return (
@@ -34,14 +35,12 @@ const emptyEmptyOnceCellTree = [
     }
 ]
 
-const ManualTree = () => {
+
+
+const TreeManual = () => {
 
 // States
 // Tree elements
-  const [treeElements, setTreeElements] = useState<{ name: string; type: string }[]>([]);
-  const [treeConections, setTreeConnections] = useState<{ from: string, to: string }[]>([]); // List of connections between elements in the tree
-  const [RenderTree, setRenderTree] = useState<boolean>(false);
-  const [treeData, setTreeData] = useState<any>(); //Data of the trained tree
   const [manualTreeData, setManualTreeData] = useState<any>(emptyEmptyOnceCellTree); //Data of the manually created tree
   const [maxId, setMaxId] = useState(1); // Maximum id of the manual tree elements, allows to create unique ids for each element
 
@@ -162,4 +161,4 @@ const ManualTree = () => {
 
 }
 
-export default ManualTree
+export default TreeManual;
