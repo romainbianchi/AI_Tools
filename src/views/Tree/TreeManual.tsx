@@ -1,5 +1,12 @@
 import {useEffect, useState} from 'react';
 import './tree.css';
+import { all } from '@tensorflow/tfjs';
+
+interface TreeManualProps {
+    lookUpTableCallback: () => void; // Define the type of lookUpTableCallback
+}
+
+
 
 /* adapted from React-Node-Flow: https://github.com/kumarabhishek008/React-Node-Flow/tree/master */
 const manualTreeRendering = (ManualTreeData: any, handleOnDropInTree:(e:React.DragEvent) => void) => {
@@ -36,11 +43,72 @@ const emptyEmptyOnceCellTree = [
     }
 ]
 
+const createLookUpTable = (treeData: any) => {
+
+    // Create an array to hold all possible entries
+    const allPossibleEntries = [];
+    // Loop through each decimal number from 0 to 511
+    for (let i = 0; i < 2**9; i++) {
+        // Convert the decimal number to its binary representation
+        const binaryString = i.toString(2).padStart(9, '0');
+        
+        // Convert the binary string to an array of numbers
+        const entryArray = binaryString.split('').map(Number);
+        
+        // Push the array to the allPossibleEntries array
+        allPossibleEntries.push(entryArray);
+    }
+
+    // copy allPossibleEntries in a new variable look-up table
+    var lookUpTable = allPossibleEntries.slice();
+
+    // Look-up table
+    for (let i=0; i<=allPossibleEntries.length-1; i++) {
+        var element = treeData[0];
+        var entry = allPossibleEntries[i];
+
+        const checkElementInTree:any = (element:any, entry:number[], lookUpTable:any) => {
+
+            if (element.children.length === 0) {
+                // if the element is an action, add the entry to the look-up table
+                lookUpTable[i].pop()
+                lookUpTable[i].push(element.text)
+            } else {
+                // if the element is a condition, check the condition and go to the children
+                var temp_tab = element.condTab.slice();
+                // Remove first two elements of the table (ground sensors)
+                temp_tab.shift();
+                temp_tab.shift();
+                // find index of max value in the table
+                var max = Math.max(...temp_tab);
+                var argmax = temp_tab.indexOf(max)+2;
+
+                var next_element: any;
+
+                if (entry[argmax] === 1) {
+                    next_element = element.children[0]
+                } else {
+                    next_element = element.children[1]
+                }
+
+                return checkElementInTree(next_element, entry, lookUpTable);
+            }
+
+            return lookUpTable;
+        }
+
+        lookUpTable = checkElementInTree(element, entry, lookUpTable);
+    };
+
+    return lookUpTable;
+}
 
 
-const TreeManual = () => {
+
+const TreeManual =({lookUpTableCallback}:{lookUpTableCallback:any}) => {
 
 // States
+
 // Tree elements
   const [manualTreeData, setManualTreeData] = useState<any>(emptyEmptyOnceCellTree); //Data of the manually created tree
   const [maxId, setMaxId] = useState(1); // Maximum id of the manual tree elements, allows to create unique ids for each element
@@ -66,9 +134,9 @@ const TreeManual = () => {
                         children: []
                     };
                 } else {
-                // increment the maxId by 2
-                const newMaxId = maxId + 2;
-                setMaxId(newMaxId);
+                    // increment the maxId by 2
+                    const newMaxId = maxId + 2;
+                    setMaxId(newMaxId);
                     return {
                         ...item,
                         text: name,
@@ -102,9 +170,6 @@ const TreeManual = () => {
 
         // Update the state
         setManualTreeData(newManualTreeData);
-
-        console.log('manualTreeData:', newManualTreeData)
-
     }
 
     // helper function to recursively update the children in the tree
@@ -156,9 +221,14 @@ const TreeManual = () => {
         })
 
         return newChildren;
-
     }
 
+    useEffect(() => {
+        // Create look-up when treeData changes
+        var lookUpTable = createLookUpTable(manualTreeData);
+        // Call the lookUpTableCallback function
+        lookUpTableCallback(lookUpTable);
+    }, [manualTreeData]);
 
     // Render
 

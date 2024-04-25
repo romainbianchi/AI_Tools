@@ -8,7 +8,6 @@ import { max, string } from '@tensorflow/tfjs';
 import { emit } from 'xstate';
 
 // components
-import ManualTree from '../Tree/TreeManual';
 import TreeAI from '../Tree/TreeAI';
 import TreeManual from '../Tree/TreeManual';
 
@@ -46,7 +45,7 @@ const App = observer(() => {
   const [treeData, setTreeData] = useState<any>(); //Data of the trained tree
 
   // Look-up table for control with manual tree
-  const [lookUpTable, setLookUpTable] = useState<any>({});
+  const [lookUpTable, setLookUpTable] = useState<any>();
 
 
   // ----------------- Functions -----------------
@@ -68,6 +67,9 @@ const App = observer(() => {
     if (mode === 'PREDICT') {
       user.predictDecisionTree(controledRobot, user.captors.state[controledRobot]);
     }
+    if (mode === 'MANUALCONTROL'){
+      //user.ManualTreeControl(controledRobot, lookUpTable);
+    }
   }, [mode, user.captors.state, controledRobot]);
 
   useEffect(() => {
@@ -75,10 +77,18 @@ const App = observer(() => {
       if (mode === 'PREDICT') {
         user.predictDecisionTree(controledRobot, user.captors.state[controledRobot]);
       }
+      if (mode === 'MANUALCONTROL'){
+        //user.ManualTreeControl(controledRobot, lookUpTable);
+      }
     }, 1000);
 
     return () => clearInterval(interval);
   });
+
+  // callback function to get lookup table from the manual tree
+  const getLookUpTable = (table: any) => {
+    setLookUpTable(table);
+  }
 
 
   // Drag and Drop
@@ -160,6 +170,11 @@ const App = observer(() => {
     await user.emitMotorEvent(controledRobot, 'STOP');
   }
 
+  const onControl = () => {
+    // control the robot using the look-up table
+    setMode('MANUALCONTROL');
+  }
+
 
   // ----------------- Render -----------------
   return (
@@ -195,13 +210,15 @@ const App = observer(() => {
 
           <>
             {/* Add tree visualization */}
-            <TreeManual/>
+            <TreeManual lookUpTableCallback={getLookUpTable}/>
 
             {/* Mode buttons */}
             <div className="modeButtons">
               <button onClick={() => setAppState('AI')}>AI</button>
               <button onClick={() => setAppState('Manual')}>Manual</button>
             </div>
+
+            <button onClick={onControl}>Control</button>
 
             <div className="container">
 
