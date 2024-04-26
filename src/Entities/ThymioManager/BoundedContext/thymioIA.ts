@@ -114,10 +114,10 @@ export class ThymioIA implements IThymioIA {
           case 'prox_ground_1':
             captors[1] = value > 0 ? 1 : 0;
             break;
-          case 'prox_front_1':
+          case 'prox_front_0':
             captors[2] = value > 0 ? 1 : 0;
             break;
-          case 'prox_front_0':
+          case 'prox_front_1':
             captors[3] = value > 0 ? 1 : 0;
             break;
           case 'prox_front_2':
@@ -249,6 +249,7 @@ export class ThymioIA implements IThymioIA {
   };
 
   manualTreeControl = async (uuid: string, captors: number[], lookUpTable: any) => {
+    console.log(captors);
     // Iterate over the lookup table
     for (let i = 0; i < lookUpTable.length; i++) {
       // Compare the sensor values
@@ -256,7 +257,6 @@ export class ThymioIA implements IThymioIA {
         // If they match, emit the corresponding action and return it
         const action = lookUpTable[i][8];
         this.emitMotorEvent(uuid, action);
-        console.log('Action:', action);
         return action;
       }
    }
