@@ -68,7 +68,7 @@ const App = observer(() => {
       user.predictDecisionTree(controledRobot, user.captors.state[controledRobot]);
     }
     if (mode === 'MANUALCONTROL'){
-      //user.ManualTreeControl(controledRobot, lookUpTable);
+      user.manualTreeControl(controledRobot, user.captors.state[controledRobot], lookUpTable);
     }
   }, [mode, user.captors.state, controledRobot]);
 
@@ -78,7 +78,7 @@ const App = observer(() => {
         user.predictDecisionTree(controledRobot, user.captors.state[controledRobot]);
       }
       if (mode === 'MANUALCONTROL'){
-        //user.ManualTreeControl(controledRobot, lookUpTable);
+        user.manualTreeControl(controledRobot, user.captors.state[controledRobot], lookUpTable);
       }
     }, 1000);
 
@@ -219,6 +219,7 @@ const App = observer(() => {
             </div>
 
             <button onClick={onControl}>Control</button>
+            <button onClick={onStop}>Stop</button>
 
             <div className="container">
 

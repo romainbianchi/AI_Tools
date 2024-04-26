@@ -248,4 +248,21 @@ export class ThymioIA implements IThymioIA {
     }
   };
 
+  manualTreeControl = async (uuid: string, captors: number[], lookUpTable: any) => {
+    // Iterate over the lookup table
+    for (let i = 0; i < lookUpTable.length; i++) {
+      // Compare the sensor values
+      if (lookUpTable[i].slice(0, 7).every((value: number, index: number) => value === captors[index])) {
+        // If they match, emit the corresponding action and return it
+        const action = lookUpTable[i][8];
+        this.emitMotorEvent(uuid, action);
+        console.log('Action:', action);
+        return action;
+      }
+   }
+
+    // If no match is found, return a default action or handle the error appropriately
+    console.error('No matching action found in the lookup table');
+    return null;
+  }
 }

@@ -15,6 +15,7 @@ export class AllUser implements Users {
   trainDecisionTree;
   trainDecisionTreeSklearn;
   predictDecisionTree;
+  manualTreeControl;
 
   constructor({ activity, hosts }: { activity: Activity; hosts: string[] }) {
     const thymioIA = Container.factoryFromInjectable<IThymioIA>('BOUNDED_CONTEXT', 'ThymioIA', [], { activity, hosts });
@@ -32,6 +33,7 @@ export class AllUser implements Users {
     this.trainDecisionTree = thymioIA.trainDecisionTree;
     this.trainDecisionTreeSklearn = thymioIA.trainDecisionTreeSklearn;
     this.predictDecisionTree = thymioIA.predictDecisionTree;
+    this.manualTreeControl = thymioIA.manualTreeControl;
   }
 }
 

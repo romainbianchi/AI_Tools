@@ -16,6 +16,7 @@ interface IThymioIA {
   trainDecisionTree: (data: { action: string; captors: number[] }[]) => Promise<void>;
   trainDecisionTreeSklearn: (data: { action: string; captors: number[] }[]) => Promise<string>;
   predictDecisionTree: (uuid: string, captors: number[]) => Promise<void>;
+  manualTreeControl: (uuid: string, captors: number[], lookUpTable:any) => Promise<void>;
 }
 
 export default IThymioIA;
