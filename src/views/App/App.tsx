@@ -97,48 +97,6 @@ const App = observer(() => {
     e.dataTransfer.setData('draggedData', data);
   }
 
-  const handleOnDrop = (e: React.DragEvent, dropAreaType: string) => {
-
-    const droppedData = e.dataTransfer.getData('draggedData');
-
-    if (droppedData) {
-      const { type, name } = JSON.parse(droppedData);
-      console.log('droppedData', type, name);
-
-      // handle case when the element is dropped in the target box
-      if (dropAreaType === 'target') {
-        if (!treeElements.some(element => element.name === name)) {
-          if (type === 'action') {
-            setActions(actions.filter(action => action !== name));
-            setTreeElements([...treeElements, {name: name, type: 'action'}]);
-          } else if (type === 'condition') {
-            setConditions(conditions.filter(condition => condition !== name));
-            setTreeElements([...treeElements, {name: name, type: 'condition'}]);
-          }
-        }
-      } 
-
-      // handle case when the element is dropped in the initial box
-      if (dropAreaType === 'initial') {
-        if (type === 'action') {
-          if (!actions.includes(name)) {
-            setActions([...actions, name]);
-            setTreeElements(treeElements.filter(element => element.name !== name));
-          }
-        } else if (type === 'condition') {
-          if (!conditions.includes(name)) {
-            setConditions([...conditions, name]);
-            setTreeElements(treeElements.filter(element => element.name !== name));
-          }
-        }
-      }
-    }
-  }
-
-  const handleOnDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-  }
-
   const handleClickAction = async (action: string) => {
     // add new data when click on the action
     setData([...data, { action, captors: user.captors.state[controledRobot] }]);
@@ -209,9 +167,6 @@ const App = observer(() => {
           // App state is Manual
 
           <>
-            {/* Add tree visualization */}
-            <TreeManual lookUpTableCallback={getLookUpTable}/>
-
             {/* Mode buttons */}
             <div className="modeButtons">
               <button onClick={() => setAppState('AI')}>AI</button>
@@ -226,13 +181,8 @@ const App = observer(() => {
               {/* left columns */}
               <div className="column">
                 <div className="leftColumnBox">
-                  <div className='targetBox' onDrop={(e) => handleOnDrop(e, 'target')} onDragOver={handleOnDragOver}>Drop Area
-                    <div className='grid'>
-                      {treeElements.map((element, index) => (
-                        <div key={index} draggable="true" className='draggableBox' onDragStart={(e) => handleOnDrag(e, element.type, element.name, [])}>{element.name}</div>
-                      ))}
-                    </div>
-                  </div>
+                  {/* Add tree visualization */}
+                  <TreeManual lookUpTableCallback={getLookUpTable}/>
                 </div>
               </div>
 
@@ -243,7 +193,7 @@ const App = observer(() => {
                 {/* Box for conditions */}
                 <div className="rightColumnBox">
                   <h2>Conditions</h2>
-                  <div className="grid" onDrop={(e) => handleOnDrop(e, 'initial')} onDragOver={handleOnDragOver}>
+                  <div className="grid">
                     {/* Remaining conditions in the right column */}
                     {conditions.map((condition, index) => (
                       <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'condition', condition.name, condition.tab)}>{condition.name}</div>
@@ -254,7 +204,7 @@ const App = observer(() => {
                 {/* Box for actions */}
                 <div className="rightColumnBox">
                   <h2>Actions</h2>
-                  <div className="grid" onDrop={(e) => handleOnDrop(e, 'initial')} onDragOver={handleOnDragOver}>
+                  <div className="grid">
                     {/* Remaining actions in the right column */}
                     {actions.map((action, index) => (
                       <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'action', action, [])}>{action}</div>
