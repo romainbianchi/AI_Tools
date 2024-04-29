@@ -91,8 +91,27 @@ const App = observer(() => {
 
   // Detect when button is pressed
   useEffect(() => {
-    console.log('button pressed');
-    console.log(user.button.state[controledRobot])
+    // select action according to the button pressed
+    switch (user.button.state[controledRobot]) {
+      case 'forward':
+        handleClickAction('FORWARD');
+        break;
+      case 'left':
+        handleClickAction('LEFT');
+        break;
+      case 'backward':
+        handleClickAction('BACKWARD');
+        break;
+      case 'right':
+        handleClickAction('RIGHT');
+        break;
+      case 'center':
+        handleClickAction('STOP');
+        break;
+      // default
+      default:
+        break;
+    }
   }, [user.button.state]);
 
   // callback function to get lookup table from the manual tree
@@ -107,7 +126,16 @@ const App = observer(() => {
     e.dataTransfer.setData('draggedData', data);
   }
 
+  // Take a data point when clicking on the action buttons
   const handleClickAction = async (action: string) => {
+    // add new data when click on the action
+    setData([...data, { action, captors: user.captors.state[controledRobot].slice(2) }]); // slice to remove the first two elements of the captors (ground sensors)
+    // emit event to the robot
+    // await user.emitMotorEvent(controledRobot, action);
+  }
+
+  // Take a data point when clicking on the robot buttons
+  const handleClickRobot = async (action:string) => {
     // add new data when click on the action
     setData([...data, { action, captors: user.captors.state[controledRobot].slice(2) }]); // slice to remove the first two elements of the captors (ground sensors)
     // emit event to the robot

@@ -110,33 +110,42 @@ export class ThymioIA implements IThymioIA {
       onVariableChange(uuid, variables);
       let captors = toJS(this.captors.state)[uuid] || [0, 0, 0, 0, 0, 0, 0, 0, 0];
       let button = toJS(this.button.state)[uuid] || '';
+      let type = 'sensors'
 
       Object.entries(variables).forEach(([variable, value], index) => {
         switch (variable) {
           // proximity sensors
           case 'prox_ground_0':
             captors[0] = value > 0 ? 1 : 0;
+            type = 'sensors';
             break;
           case 'prox_ground_1':
             captors[1] = value > 0 ? 1 : 0;
+            type = 'sensors';
             break;
           case 'prox_front_0':
             captors[2] = value > 0 ? 1 : 0;
+            type = 'sensors';
             break;
           case 'prox_front_1':
             captors[3] = value > 0 ? 1 : 0;
+            type = 'sensors';
             break;
           case 'prox_front_2':
             captors[4] = value > 0 ? 1 : 0;
+            type = 'sensors';
             break;
           case 'prox_front_3':
             captors[5] = value > 0 ? 1 : 0;
+            type = 'sensors';
             break;
           case 'prox_front_4':
             captors[6] = value > 0 ? 1 : 0;
+            type = 'sensors';
             break;
           case 'prox_back_0':
             captors[7] = value > 0 ? 1 : 0;
+            type = 'sensors';
             break;
           case 'prox_back_1':
             captors[8] = value > 0 ? 1 : 0;
@@ -144,18 +153,23 @@ export class ThymioIA implements IThymioIA {
           // buttons
           case 'button_center':
             button = 'center';
+            type = 'buttons';
             break;
           case 'button_forward':
             button = 'forward';
+            type = 'buttons';
             break;
           case 'button_left':
             button = 'left';
+            type = 'buttons';
             break;
           case 'button_backward':
-            button = 'back';
+            button = 'backward';
+            type = 'buttons';
             break;
           case 'button_right':
             button = 'right';
+            type = 'buttons';
             break;
           // default
           default:
@@ -163,8 +177,13 @@ export class ThymioIA implements IThymioIA {
         }
       });
 
-      this.captors.set({ ...toJS(this.captors.state), [uuid]: captors });
-      this.button.set({ ...toJS(this.button.state), [uuid]: button});
+      if (type == 'sensors') {
+        this.captors.set({ ...toJS(this.captors.state), [uuid]: captors });
+      } else {
+        this.captors.set({ ...toJS(this.captors.state), [uuid]: captors });
+        this.button.set({ ...toJS(this.button.state), [uuid]: button});
+      }
+      
     });
   };
 
