@@ -32,15 +32,18 @@ const App = observer(() => {
   const [robots, setRobots] = useState<string[]>([]);
   const [controledRobot, setControledRobot] = useState<string>('');
   const [withoutRobot, setwithoutRobot] = useState<boolean>(false); // Used to develop without the robot
+  
+  // Modes
+  const [mode, setMode] = useState<'TRAIN' | 'PREDICT' | 'MANUALCONTROL'>('TRAIN');
+
+  // Conditions and actions
+  const [conditions, setConditions] = useState<any[]>(cond); // List of conditions
+  const [actions, setActions] = useState<string[]>(['FORWARD', 'BACKWARD', 'LEFT', 'RIGHT', 'STOP']); // List of actions
+  
   // Store the data for the training
   const [data, setData] = useState<{ action: string; captors: number[] }[]>([]);
 
-  const [mode, setMode] = useState<'TRAIN' | 'PREDICT' | 'MANUALCONTROL'>('TRAIN');
-  const [conditions, setConditions] = useState<any[]>(cond); // List of conditions
-  const [actions, setActions] = useState<string[]>(['FORWARD', 'BACKWARD', 'LEFT', 'RIGHT', 'STOP']); // List of actions
-
   // Tree elements (Tree using AI)
-  const [treeElements, setTreeElements] = useState<{ name: string; type: string }[]>([]);
   const [renderTree, setRenderTree] = useState<boolean>(false);
   const [treeData, setTreeData] = useState<any>(); //Data of the trained tree
 
@@ -167,6 +170,8 @@ const App = observer(() => {
           // App state is Manual
 
           <>
+            <TreeManual lookUpTableCallback={getLookUpTable} />
+
             {/* Mode buttons */}
             <div className="modeButtons">
               <button onClick={() => setAppState('AI')}>AI</button>
@@ -181,8 +186,7 @@ const App = observer(() => {
               {/* left columns */}
               <div className="column">
                 <div className="leftColumnBox">
-                  {/* Add tree visualization */}
-                  <TreeManual lookUpTableCallback={getLookUpTable}/>
+                  
                 </div>
               </div>
 
