@@ -7,6 +7,7 @@ export interface DataEntry {
 
 interface IThymioIA {
   captors: Observable<{ [uuid: string]: number[] }>;
+  button: Observable<{ [uuid: string]: string }>;
   getRobotsUuids: () => Promise<string[]>;
   takeControl: (uuid: string, onVariableChange?: (uuid: string, variables: { [name: string]: number }) => void) => void;
   predict: (uuid: string, input: string[]) => void;

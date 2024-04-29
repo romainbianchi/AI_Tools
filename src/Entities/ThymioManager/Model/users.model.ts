@@ -5,6 +5,7 @@ export type UsersType = 'AllUser' | 'Teacher' | 'Student' | 'Admin' | 'Dev';
 
 export interface Users {
   captors: Observable<{ [uuid: string]: number[] }>;
+  button: Observable<{ [uuid: string]: string }>;
   predict: (uuid: string, input: string[]) => void;
   trainModel: (data: DataEntry[]) => Promise<void>;
   getRobotsUuids: () => Promise<string[]>;

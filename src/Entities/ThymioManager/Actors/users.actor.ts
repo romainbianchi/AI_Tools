@@ -6,6 +6,7 @@ import type { Users } from '../Model/users.model';
 @Actor({ key: 'User', predicate: ['AllUser'] })
 export class AllUser implements Users {
   captors: Observable<{ [uuid: string]: number[] }>;
+  button: Observable<{ [uuid: string]: string }>;
   getRobotsUuids;
   takeControl;
   predict;
@@ -24,6 +25,7 @@ export class AllUser implements Users {
     }
 
     this.captors = thymioIA.captors;
+    this.button = thymioIA.button;
     this.getRobotsUuids = thymioIA.getRobotsUuids;
     this.takeControl = thymioIA.takeControl;
     this.predict = thymioIA.predict;

@@ -41,7 +41,7 @@ const App = observer(() => {
   const [conditions, setConditions] = useState<any[]>(cond); // List of conditions
   const [actions, setActions] = useState<string[]>(['FORWARD', 'BACKWARD', 'LEFT', 'RIGHT', 'STOP']); // List of actions
   
-  // Store the data for the training
+  // Store proximity sensor data for the training
   const [data, setData] = useState<{ action: string; captors: number[] }[]>([]);
 
   // Tree elements (Tree using AI)
@@ -88,6 +88,12 @@ const App = observer(() => {
 
     return () => clearInterval(interval);
   });
+
+  // Detect when button is pressed
+  useEffect(() => {
+    console.log('button pressed');
+    console.log(user.button.state[controledRobot])
+  }, [user.button.state]);
 
   // callback function to get lookup table from the manual tree
   const getLookUpTable = (table: any) => {

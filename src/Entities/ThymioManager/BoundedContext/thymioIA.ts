@@ -11,6 +11,10 @@ export class ThymioIA implements IThymioIA {
     key: 'Thymios',
     initialValue: {},
   });
+  button: Observable<{ [uuid: string]: string }> = createObservable({
+    key: 'Thymios',
+    initialValue: {},
+  });
 
   model: tf.Sequential | null = null;
 
@@ -105,9 +109,11 @@ export class ThymioIA implements IThymioIA {
     return this.tdmController.takeControl(uuid, (_uuid, variables) => {
       onVariableChange(uuid, variables);
       let captors = toJS(this.captors.state)[uuid] || [0, 0, 0, 0, 0, 0, 0, 0, 0];
+      let button = toJS(this.button.state)[uuid] || '';
 
       Object.entries(variables).forEach(([variable, value], index) => {
         switch (variable) {
+          // proximity sensors
           case 'prox_ground_0':
             captors[0] = value > 0 ? 1 : 0;
             break;
@@ -135,12 +141,30 @@ export class ThymioIA implements IThymioIA {
           case 'prox_back_1':
             captors[8] = value > 0 ? 1 : 0;
             break;
+          // buttons
+          case 'button_center':
+            button = 'center';
+            break;
+          case 'button_forward':
+            button = 'forward';
+            break;
+          case 'button_left':
+            button = 'left';
+            break;
+          case 'button_backward':
+            button = 'back';
+            break;
+          case 'button_right':
+            button = 'right';
+            break;
+          // default
           default:
             break;
         }
       });
 
       this.captors.set({ ...toJS(this.captors.state), [uuid]: captors });
+      this.button.set({ ...toJS(this.button.state), [uuid]: button});
     });
   };
 
