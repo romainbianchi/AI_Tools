@@ -48,15 +48,15 @@ const createLookUpTable = (treeData: any) => {
     // Create an array to hold all possible entries
     const allPossibleEntries = [];
     // Loop through each decimal number from 0 to 511
-    for (let i = 0; i < 2**9; i++) {
+    for (let i = 0; i < (2**7); i++) {
         // Convert the decimal number to its binary representation
-        const binaryString = i.toString(2).padStart(9, '0');
+        const binaryString = i.toString(2).padStart(7, '0');
         
         // Convert the binary string to an array of numbers
         const entryArray = binaryString.split('').map(Number);
         
         // Push the array to the allPossibleEntries array
-        allPossibleEntries.push(entryArray);
+        allPossibleEntries.push([...entryArray]);
     }
 
     // copy allPossibleEntries in a new variable look-up table
@@ -71,17 +71,14 @@ const createLookUpTable = (treeData: any) => {
 
             if (element.children.length === 0) {
                 // if the element is an action, add the entry to the look-up table
-                lookUpTable[i].pop()
-                lookUpTable[i].push(element.text)
+                const index = parseInt(entry.join(''), 2);
+                lookUpTable[index] = entry.concat([element.text]); 
             } else {
                 // if the element is a condition, check the condition and go to the children
                 var temp_tab = element.condTab.slice();
-                // Remove first two elements of the table (ground sensors)
-                temp_tab.shift();
-                temp_tab.shift();
                 // find index of max value in the table
                 var max = Math.max(...temp_tab);
-                var argmax = temp_tab.indexOf(max)+2;
+                var argmax = temp_tab.indexOf(max);
 
                 var next_element: any;
 

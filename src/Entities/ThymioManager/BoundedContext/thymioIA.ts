@@ -249,14 +249,16 @@ export class ThymioIA implements IThymioIA {
   };
 
   manualTreeControl = async (uuid: string, captors: number[], lookUpTable: any) => {
-    console.log(captors);
     // Iterate over the lookup table
     for (let i = 0; i < lookUpTable.length; i++) {
       // Compare the sensor values
-      if (lookUpTable[i].slice(0, 7).every((value: number, index: number) => value === captors[index])) {
+      var last_idx = lookUpTable[i].length-1;
+      console.log('last idx: ', last_idx)
+      if (lookUpTable[i].slice(0, last_idx).every((value: number, index: number) => value === captors[index])) {
         // If they match, emit the corresponding action and return it
-        const action = lookUpTable[i][8];
-        this.emitMotorEvent(uuid, action);
+        const action = lookUpTable[i][last_idx];
+        console.log('Action:', action);
+        // this.emitMotorEvent(uuid, action);
         return action;
       }
    }

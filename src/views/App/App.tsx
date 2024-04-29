@@ -14,14 +14,15 @@ import TreeManual from '../Tree/TreeManual';
 const user = thymioManagerFactory({ user: 'AllUser', activity: 'ThymioIA', hosts: ['localhost'] });
 
 // table of condition and corresponding sensor values
+// [front_left, front_center_left, front_center, front_center_right, front_right, back_left, back_right]
 const cond = [
-  {name: 'sensor0', tab: [1,1,1,0,0,0,0,0,0]},
-  {name: 'sensor1', tab: [1,1,0,1,0,0,0,0,0]},
-  {name: 'sensor2', tab: [1,1,0,0,1,0,0,0,0]},
-  {name: 'sensor3', tab: [1,1,0,0,0,1,0,0,0]},
-  {name: 'sensor4', tab: [1,1,0,0,0,0,1,0,0]},
-  {name: 'sensor5', tab: [1,1,0,0,0,0,0,1,0]},
-  {name: 'sensor6', tab: [1,1,0,0,0,0,0,0,1]},
+  {name: 'sensor0', tab: [1,0,0,0,0,0,0]},
+  {name: 'sensor1', tab: [0,1,0,0,0,0,0]},
+  {name: 'sensor2', tab: [0,0,1,0,0,0,0]},
+  {name: 'sensor3', tab: [0,0,0,1,0,0,0]},
+  {name: 'sensor4', tab: [0,0,0,0,1,0,0]},
+  {name: 'sensor5', tab: [0,0,0,0,0,1,0]},
+  {name: 'sensor6', tab: [0,0,0,0,0,0,1]},
 ];
 
 const App = observer(() => {
@@ -68,20 +69,20 @@ const App = observer(() => {
 
   useEffect(() => {
     if (mode === 'PREDICT') {
-      user.predictDecisionTree(controledRobot, user.captors.state[controledRobot]);
+      user.predictDecisionTree(controledRobot, user.captors.state[controledRobot].slice(2)); // slice to remove the first two elements of the captors (ground sensors)
     }
     if (mode === 'MANUALCONTROL'){
-      user.manualTreeControl(controledRobot, user.captors.state[controledRobot], lookUpTable);
+      user.manualTreeControl(controledRobot, user.captors.state[controledRobot].slice(2), lookUpTable); // slice to remove the first two elements of the captors (ground sensors)
     }
   }, [mode, user.captors.state, controledRobot]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (mode === 'PREDICT') {
-        user.predictDecisionTree(controledRobot, user.captors.state[controledRobot]);
+        user.predictDecisionTree(controledRobot, user.captors.state[controledRobot].slice(2)); // slice to remove the first two elements of the captors (ground sensors)
       }
       if (mode === 'MANUALCONTROL'){
-        user.manualTreeControl(controledRobot, user.captors.state[controledRobot], lookUpTable);
+        user.manualTreeControl(controledRobot, user.captors.state[controledRobot].slice(2), lookUpTable); // slice to remove the first two elements of the captors (ground sensors)
       }
     }, 1000);
 
@@ -102,7 +103,7 @@ const App = observer(() => {
 
   const handleClickAction = async (action: string) => {
     // add new data when click on the action
-    setData([...data, { action, captors: user.captors.state[controledRobot] }]);
+    setData([...data, { action, captors: user.captors.state[controledRobot].slice(2) }]); // slice to remove the first two elements of the captors (ground sensors)
     // emit event to the robot
     // await user.emitMotorEvent(controledRobot, action);
   }
@@ -118,7 +119,7 @@ const App = observer(() => {
   }
 
   const onPredict = async () => {
-    await user.predictDecisionTree(controledRobot, user.captors.state[controledRobot]);
+    await user.predictDecisionTree(controledRobot, user.captors.state[controledRobot].slice(2)); // slice to remove the first two elements of the captors (ground sensors)
   }
 
   const onClear = () => {
