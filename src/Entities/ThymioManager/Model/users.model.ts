@@ -11,7 +11,7 @@ export interface Users {
   getRobotsUuids: () => Promise<string[]>;
   takeControl: (uuid: string, onVariableChange?: (uuid: string, variables: { [name: string]: number }) => void) => void;
   emitAction: (uuid: string, action: string, args: number[]) => Promise<void>;
-  emitMotorEvent: (uuid: string, action: string) => Promise<void>;
+  emitMotorEvent: (uuid: string, action: string, discrete:boolean) => Promise<void>;
   trainDecisionTree: (data: { action: string; captors: number[] }[]) => Promise<void>;
   trainDecisionTreeSklearn: (data: { action: string; captors: number[] }[]) => Promise<string>;
   predictDecisionTree: (uuid: string, captors: number[]) => Promise<void>;

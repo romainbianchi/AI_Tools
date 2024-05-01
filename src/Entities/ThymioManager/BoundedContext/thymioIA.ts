@@ -94,7 +94,7 @@ export class ThymioIA implements IThymioIA {
       const predictedIndex = list[0].indexOf(Math.max(...list[0]));
       const predictedAction = Object.keys(this.actionMapping).find(key => this.actionMapping[key] === predictedIndex);
       console.log('Prediction:', predictedAction);
-      this.emitMotorEvent(uuid, predictedAction as string);
+      this.emitMotorEvent(uuid, predictedAction as string, false);
     });
   };
 
@@ -191,7 +191,7 @@ export class ThymioIA implements IThymioIA {
     return this.tdmController.emitAction(uuid, action, args);
   };
 
-  emitMotorEvent = async (uuid: string, action: string) => {
+  emitMotorEvent = async (uuid: string, action: string, discrete: boolean) => {
     switch (action) {
       case 'STOP':
         this.emitAction(uuid, 'M_motors', [0, 0]);
@@ -212,10 +212,13 @@ export class ThymioIA implements IThymioIA {
       default:
         break;
     }
-
-    // setTimeout(() => {
-    //   this.emitAction(uuid, 'M_motors', [0, 0]);
-    // }, 600);
+    
+    if (discrete){
+      setTimeout(() => {
+        this.emitAction(uuid, 'M_motors', [0, 0]);
+      }, 600);
+    }
+    
   };
 
   trainDecisionTree = async (data: { action: string; captors: number[] }[]) =>{
@@ -284,7 +287,7 @@ export class ThymioIA implements IThymioIA {
       // Launch the function in the Python script
       const result = await response.json();
       var action = result['predictions'][0];
-      this.emitMotorEvent(uuid, action);
+      this.emitMotorEvent(uuid, action, false);
       return result;
     } else {
       console.error('Failed to predict decision tree');

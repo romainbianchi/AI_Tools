@@ -131,15 +131,7 @@ const App = observer(() => {
     // add new data when click on the action
     setData([...data, { action, captors: user.captors.state[controledRobot].slice(2) }]); // slice to remove the first two elements of the captors (ground sensors)
     // emit event to the robot
-    // await user.emitMotorEvent(controledRobot, action);
-  }
-
-  // Take a data point when clicking on the robot buttons
-  const handleClickRobot = async (action:string) => {
-    // add new data when click on the action
-    setData([...data, { action, captors: user.captors.state[controledRobot].slice(2) }]); // slice to remove the first two elements of the captors (ground sensors)
-    // emit event to the robot
-    // await user.emitMotorEvent(controledRobot, action);
+    await user.emitMotorEvent(controledRobot, action, true);
   }
 
   const onTrain = async (data: { action: string; captors: number[] }[]) => {
@@ -163,7 +155,7 @@ const App = observer(() => {
 
   const onStop = async () => {
     setMode('TRAIN');
-    await user.emitMotorEvent(controledRobot, 'STOP');
+    await user.emitMotorEvent(controledRobot, 'STOP', false);
   }
 
   const onControl = () => {
