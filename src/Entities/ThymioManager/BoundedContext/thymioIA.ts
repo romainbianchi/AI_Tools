@@ -303,8 +303,7 @@ export class ThymioIA implements IThymioIA {
       if (lookUpTable[i].slice(0, last_idx).every((value: number, index: number) => value === captors[index])) {
         // If they match, emit the corresponding action and return it
         const action = lookUpTable[i][last_idx];
-        console.log('Action:', action);
-        // this.emitMotorEvent(uuid, action);
+        this.emitMotorEvent(uuid, action, false);
         return action;
       }
    }
