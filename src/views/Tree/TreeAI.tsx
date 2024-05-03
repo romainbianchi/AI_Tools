@@ -37,7 +37,7 @@ const TreeAI = ({ data, renderTree }: { data: any; renderTree: boolean }) => {
             </div>
         ) : (
             <div></div>
-        )};
+        )}
         </>
     );
 

@@ -1,8 +1,10 @@
 #root {
-  max-width: 1280px;
+  /* max-width: 1280px; */
+  max-width: 2000px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  height: 100%;
 }
 
 .logo {
@@ -53,21 +55,23 @@
   flex-wrap: wrap;
   align-content: flex-start;
   padding-top: 10em;
-  height: 100vh;
+  height: 100%;
   width: 100%;
 }
 
 .column {
   display: inline-block;
-  width: 50%;
+  /* width: 50%; */
   height: 100%;
 }
 
 .rightColumnBox {
   /* border: 1px solid black; */
-  width: 100%;
+  /* width: 100%; */
   height: 30%;
-  padding-left: 10em;
+  padding-bottom: 60px;
+  /* overflow: auto; */
+  /* padding-left: 10em; */
 }
 
 .grid {
@@ -117,6 +121,4 @@
   left: 0;
   padding: 3em;
   display: flex;
-  gap: 1em;
-  height: 40px;
 }

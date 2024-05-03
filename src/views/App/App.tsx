@@ -119,7 +119,6 @@ const App = observer(() => {
     setLookUpTable(table);
   }
 
-
   // Drag and Drop
   const handleOnDrag = (e:React.DragEvent, type: string, name: string, condTab: any[]) => {
     const data = JSON.stringify({ type, name, condTab });
@@ -197,29 +196,29 @@ const App = observer(() => {
           // App state is Manual
 
           <>
-            <TreeManual lookUpTableCallback={getLookUpTable} />
-
             {/* Mode buttons */}
             <div className="modeButtons">
               <button onClick={() => setAppState('AI')}>AI</button>
               <button onClick={() => setAppState('Manual')}>Manual</button>
             </div>
 
+            {/* Buttons */}
             <button onClick={onControl}>Control</button>
             <button onClick={onStop}>Stop</button>
 
             <div className="container">
 
               {/* left columns */}
-              <div className="column">
+              <div className="column" style={{width: '80%'}}>
                 <div className="leftColumnBox">
-                  
+                  {/* Tree */}
+                  <TreeManual lookUpTableCallback={getLookUpTable} />
                 </div>
               </div>
 
 
               {/* right columns */}
-              <div className="column">
+              <div className="column" style={{width: '20%'}}>
                   
                 {/* Box for conditions */}
                 <div className="rightColumnBox">
@@ -273,36 +272,46 @@ const App = observer(() => {
               <button onClick={() => handleClickAction('STOP')}>STOP</button>
             </div>
 
-            
-            {/* Display training data collected */}
-            <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexDirection: 'column',
-              width: '100%',
-            }}
-            >
-              {data.map(({ action, captors }, index) => (
-                <div
-                  key={index}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    width: '250px',
-                    height: '1.2rem',
-                  }}
-                >
-                  <p>{action}</p>
-                  <pre>{JSON.stringify(captors, null)}</pre>
-                </div>
-              ))}
-            </div>
+            <div className='container'>
 
-            {/* Display the tree */}
-            <TreeAI data={treeData} renderTree={renderTree} />
+              {/* Left column */}
+              <div className='column' style={{width: '80%'}}>
+                {/* Display the tree */}
+                <TreeAI data={treeData} renderTree={renderTree} />
+              </div>
+
+              {/* Right column */}
+              <div className='column' style={{width: '20%', overflow: 'auto'}}>
+
+                {/* Display training data collected */}
+                <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexDirection: 'column',
+                  width: '100%',
+                }}
+                >
+                  {data.map(({ action, captors }, index) => (
+                    <div
+                      key={index}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        width: '250px',
+                        height: '1.5rem',
+                      }}
+                    >
+                      <pre>{JSON.stringify(captors, null)}</pre>
+                      <p>{action}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+            </div>
 
           </>
 
