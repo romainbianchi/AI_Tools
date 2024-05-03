@@ -1,11 +1,13 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import tensorflow as tf
 import tensorflow_decision_forests as tfdf
 from sklearn import tree
+import pickle as pkl
 
 from helpers import tree_to_json
 
@@ -93,7 +95,7 @@ def train_model_sklearn():
     # Convert to dataframe
     df = pd.DataFrame(data)
     df.rename(columns={'captors': 'sensors'}, inplace=True)
-    df_sensors = pd.DataFrame(df['sensors'].values.tolist(), columns=[f'sensor_{i}' for i in range(len(df['sensors'].iloc[0]))])
+    df_sensors = pd.DataFrame(df['sensors'].values.tolist(), columns=[f'sensor {i}' for i in range(len(df['sensors'].iloc[0]))])
     df = pd.concat([df.drop('sensors', axis=1), df_sensors], axis=1)
 
     # Train the model
@@ -107,6 +109,14 @@ def train_model_sklearn():
 
     # convert model to json and save in a file
     tree_str = tree_to_json(clf, X.columns, actions)
+
+    # save model to pickle file
+    with open('model.pkl', 'wb') as f:
+        pkl.dump(clf, f)
+
+    # save tree_str to a file
+    with open('tree.json', 'w') as f:
+        f.write(tree_str)
 
     # Send back a response
     return jsonify(tree_str), 200

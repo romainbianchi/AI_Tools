@@ -89,6 +89,10 @@ import json
 #   return js
 
 def tree_to_json(decision_tree, feature_names=None, label_names=None):
+    
+    # Arrange label names in alphabetical order to match the order in the sklearn decision tree model
+    label_names = np.sort(label_names)
+
     def node_to_json(tree, node_id, criterion):
         if tree.tree_.children_left[node_id] == sklearn.tree._tree.TREE_LEAF:
             return {
@@ -97,10 +101,8 @@ def tree_to_json(decision_tree, feature_names=None, label_names=None):
                 "diamond": False,
             }
         else:
-            if feature_names is not None:
-                feature = feature_names[tree.tree_.feature[node_id]]
-            else:
-                feature = str(tree.tree_.feature[node_id])
+
+            feature = feature_names[tree.tree_.feature[node_id]]
 
             if "=" in feature:
                 rule = "false"
@@ -109,7 +111,8 @@ def tree_to_json(decision_tree, feature_names=None, label_names=None):
 
             return {
                 "id": str(node_id),
-                "text": feature + " " + rule,
+                # "text": feature + " " + rule,
+                "text": feature,
                 "diamond": False,
                 "children": [
                     node_to_json(tree, tree.tree_.children_left[node_id], criterion),

@@ -38,7 +38,7 @@ const emptyEmptyOnceCellTree = [
       id:1,
       diamond:false,
       condTab: [],
-      text:'drop condition or action here',
+      text:'Condition or Action',
       children:[]
     }
 ]
@@ -83,9 +83,9 @@ const createLookUpTable = (treeData: any) => {
                 var next_element: any;
 
                 if (entry[argmax] === 1) {
-                    next_element = element.children[0]
-                } else {
                     next_element = element.children[1]
+                } else {
+                    next_element = element.children[0]
                 }
 
                 return checkElementInTree(next_element, entry, lookUpTable);
@@ -144,14 +144,14 @@ const TreeManual =({lookUpTableCallback}:{lookUpTableCallback:any}) => {
                             id: newMaxId+1,
                             diamond: false,
                             condTab: [],
-                            text: 'drop action or condition',
+                            text: 'Condition or Action',
                             children: []
                         }, 
                         {
                             id: newMaxId+2,
                             diamond: false,
                             condTab: [],
-                            text: 'drop action or condition',
+                            text: 'Condition or Action',
                             children: []
                         }
                         ]
@@ -196,14 +196,14 @@ const TreeManual =({lookUpTableCallback}:{lookUpTableCallback:any}) => {
                     id: newMaxId+1,
                     diamond: false,
                     condTab: [],
-                    text: 'drop action or condition',
+                    text: 'Condition or Action',
                     children: []
                 }, 
                 {
                     id: newMaxId+2,
                     diamond: false,
                     condTab: [],
-                    text: 'drop action or condition',
+                    text: 'Condition or Action',
                     children: []
                 }
                 ]
