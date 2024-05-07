@@ -166,17 +166,19 @@ const App = observer(() => {
   // ----------------- Render -----------------
   return (
     <>
-      <h1>Decision Tree</h1>
 
       {(controledRobot == '' && !withoutRobot) ? (
         // Robot is not connected
 
         <>
 
-          <button onClick={() => setwithoutRobot(true)}>Without Robot</button>
+          <div className='col-12 mainHeader'>
+            <h1>Decision Tree</h1>
+          </div>
 
-          <div className="card">
+          <div className="col-12 card">
             <button onClick={onClickGetRobots}>getRobots</button>
+            <button onClick={() => setwithoutRobot(true)}>Without Robot</button>
           </div>
 
           {robots.map((robot, index) => (
@@ -196,62 +198,77 @@ const App = observer(() => {
           // App state is Manual
 
           <>
-            {/* Mode buttons */}
-            <div className="modeButtons">
-              <button onClick={() => setAppState('AI')}>AI</button>
-              <button onClick={() => setAppState('Manual')}>Manual</button>
+
+            <div className='row'>
+              {/* Header */}
+              <div className='col-12 header'>
+                <h1>Manual Control</h1>
+              </div>
             </div>
 
-            {/* Buttons */}
-            <button onClick={onControl}>Control</button>
-            <button onClick={onStop}>Stop</button>
+            <div className='col-2'>
 
-            <div className="container">
-
-              {/* left columns */}
-              <div className="column" style={{width: '80%'}}>
-                <div className="leftColumnBox">
-                  {/* Tree */}
-                  <TreeManual lookUpTableCallback={getLookUpTable} />
+              <div className='row'>
+                {/* Mode buttons */}
+                <div className="modeButtons">
+                  <p>Change mode</p>
+                  <button onClick={() => setAppState('AI')}>AI</button>
+                  <button onClick={() => setAppState('Manual')}>Manual</button>
                 </div>
               </div>
 
-
-              {/* right columns */}
-              <div className="column" style={{width: '20%'}}>
-                  
-                {/* Box for conditions */}
-                <div className="rightColumnBox">
-                  <h2>Conditions</h2>
-                  <div className="grid">
-                    {/* Remaining conditions in the right column */}
-                    {conditions.map((condition, index) => (
-                      <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'condition', condition.name, condition.tab)}>{condition.name}</div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Box for actions */}
-                <div className="rightColumnBox">
-                  <h2>Actions</h2>
-                  <div className="grid">
-                    {/* Remaining actions in the right column */}
-                    {actions.map((action, index) => (
-                      <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'action', action, [])}>{action}</div>
-                    ))}
-                  </div>
+              <div className='row'>
+                {/* Buttons */}
+                <div className='modeButtons'>
+                  <p>Control</p>
+                  <button onClick={onControl}>Control</button>
+                  <button onClick={onStop}>Stop</button>
                 </div>
               </div>
+
+              <div className='row'>
+                <h4>Conditions</h4>
+                <div className="grid">
+                  {/* Remaining conditions in the right column */}
+                  {conditions.map((condition, index) => (
+                    <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'condition', condition.name, condition.tab)}>{condition.name}</div>
+                  ))}
+                </div>
+              </div>
+
+              <div className='row'>
+                <h4>Actions</h4>
+                <div className="grid">
+                  {/* Remaining actions in the right column */}
+                  {actions.map((action, index) => (
+                    <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'action', action, [])}>{action}</div>
+                  ))}
+                </div>
+              </div>
+          
             </div>
+            
+            <div className='col-10'>
+              <TreeManual lookUpTableCallback={getLookUpTable} />
+            </div>
+
           </>
 
         ) : (
           // App state is AI
 
           <>
-            <div className="modeButtons">
-              <button onClick={() => setAppState('AI')}>AI</button>
-              <button onClick={() => setAppState('Manual')}>Manual</button>
+            <div className='row'>
+              {/* Header */}
+              <div className='col-2 header'>
+                <h1>AI Control</h1>
+              </div>
+              <div className='col-8'></div>
+              {/* Mode buttons */}
+              <div className="col-2 modeButtons">
+                <button onClick={() => setAppState('AI')}>AI</button>
+                <button onClick={() => setAppState('Manual')}>Manual</button>
+              </div>
             </div>
 
             {/* Training Buttons */}
