@@ -260,48 +260,47 @@ const App = observer(() => {
           <>
             <div className='row'>
               {/* Header */}
-              <div className='col-2 header'>
+              <div className='header'>
                 <h1>AI Control</h1>
               </div>
-              <div className='col-8'></div>
-              {/* Mode buttons */}
-              <div className="col-2 modeButtons">
-                <button onClick={() => setAppState('AI')}>AI</button>
-                <button onClick={() => setAppState('Manual')}>Manual</button>
-              </div>
             </div>
 
-            {/* Training Buttons */}
-            <div style = {{padding: '2rem',}}>
-              <button onClick={() => onTrain(data)}>Train</button>
-              <button onClick={() => onPredict()}>Predict</button>
-              <button onClick={() => onExecute()}>Execute</button>
-              <button onClick={() => onClear()}>Clear</button>
-              <button onClick={() => onStop()}>Stop</button>
-            </div>
-
-            {/* Action Buttons */}
-            <div style = {{padding: '2rem',}}>
-              <button onClick={() => handleClickAction('FORWARD')}>FORWARD</button>
-              <button onClick={() => handleClickAction('BACKWARD')}>BACKWARD</button>
-              <button onClick={() => handleClickAction('LEFT')}>LEFT</button>
-              <button onClick={() => handleClickAction('RIGHT')}>RIGHT</button>
-              <button onClick={() => handleClickAction('STOP')}>STOP</button>
-            </div>
-
-            <div className='container'>
-
-              {/* Left column */}
-              <div className='column' style={{width: '80%'}}>
-                {/* Display the tree */}
-                <TreeAI data={treeData} renderTree={renderTree} />
+            <div className='col-2'>
+              <div className='row'>
+                {/* Mode buttons */}
+                <div className="modeButtons">
+                  <p>Change mode</p>
+                  <button onClick={() => setAppState('AI')}>AI</button>
+                  <button onClick={() => setAppState('Manual')}>Manual</button>
+                </div>
               </div>
 
-              {/* Right column */}
-              <div className='column' style={{width: '20%', overflow: 'auto'}}>
+              <div className='row'>
+                {/* Training Buttons */}
+                <div className='modeButtons'>
+                  <p>Control</p>
+                  <button onClick={() => onTrain(data)}>Train</button>
+                  <button onClick={() => onPredict()}>Predict</button>
+                  <button onClick={() => onExecute()}>Execute</button>
+                  <button onClick={() => onClear()}>Clear</button>
+                  <button onClick={() => onStop()}>Stop</button>
+                </div>
+              </div>
 
-                {/* Display training data collected */}
-                <div
+              <div className='row'>
+                <p>Actions</p>
+                <button onClick={() => handleClickAction('FORWARD')}>FORWARD</button>
+                <button onClick={() => handleClickAction('BACKWARD')}>BACKWARD</button>
+                <button onClick={() => handleClickAction('LEFT')}>LEFT</button>
+                <button onClick={() => handleClickAction('RIGHT')}>RIGHT</button>
+                <button onClick={() => handleClickAction('STOP')}>STOP</button>
+              </div>
+
+            </div>
+
+            <div className='col-2'>
+              {/* Display training data collected */}
+              <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -326,9 +325,20 @@ const App = observer(() => {
                     </div>
                   ))}
                 </div>
-              </div>
-
             </div>
+
+            <div className='col-6'>
+              <TreeAI data={treeData} renderTree={renderTree} />
+            </div>
+
+            {/* Action Buttons */}
+            {/* <div style = {{padding: '2rem',}}>
+              <button onClick={() => handleClickAction('FORWARD')}>FORWARD</button>
+              <button onClick={() => handleClickAction('BACKWARD')}>BACKWARD</button>
+              <button onClick={() => handleClickAction('LEFT')}>LEFT</button>
+              <button onClick={() => handleClickAction('RIGHT')}>RIGHT</button>
+              <button onClick={() => handleClickAction('STOP')}>STOP</button>
+            </div> */}
 
           </>
 
