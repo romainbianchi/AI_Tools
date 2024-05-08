@@ -25,6 +25,26 @@ const cond = [
   {name: 'sensor6', tab: [0,0,0,0,0,0,1]},
 ];
 
+// Create a correspondances between actions and images
+const actionImage = {
+  'FORWARD': 'public/forward.png',
+  'BACKWARD': 'public/backward.png',
+  'LEFT': 'public/left.png',
+  'RIGHT': 'public/right.png',
+  'STOP': 'public/stop.png',
+}
+
+// Create a correspondances between conditions and images
+const conditionImage = {
+  'sensor0': 'public/sensor0.png',
+  'sensor1': 'public/sensor1.png',
+  'sensor2': 'public/sensor2.png',
+  'sensor3': 'public/sensor3.png',
+  'sensor4': 'public/sensor4.png',
+  'sensor5': 'public/sensor5.png',
+  'sensor6': 'public/sensor6.png',
+}
+
 const App = observer(() => {
 
 
@@ -198,40 +218,39 @@ const App = observer(() => {
           // App state is Manual
 
           <>
-
             <div className='row'>
-              {/* Header */}
-              <div className='col-12 header'>
-                <h1>Manual Control</h1>
-              </div>
-            </div>
 
-            <div className='col-2'>
-
-              <div className='row'>
-                {/* Mode buttons */}
+              <div className='col-3'>
+                {/* control Buttons */}
                 <div className="modeButtons">
-                  <p>Change mode</p>
-                  <button onClick={() => setAppState('AI')}>AI</button>
-                  <button onClick={() => setAppState('Manual')}>Manual</button>
-                </div>
-              </div>
-
-              <div className='row'>
-                {/* Buttons */}
-                <div className='modeButtons'>
-                  <p>Control</p>
                   <button onClick={onControl}>Control</button>
                   <button onClick={onStop}>Stop</button>
                 </div>
               </div>
 
+              <div className='col-8'></div>
+
+
+              <div className='col-1'>
+                {/* Mode Buttons */}
+                <div className="modeButtons">
+                  <button onClick={() => setAppState('AI')} style={{backgroundColor:'#0e3b634d'}}>AI</button>
+                  <button onClick={() => setAppState('Manual')}>Manual</button>
+                </div>
+              </div>
+            </div>
+
+
+            <div className='col-3'>
+
               <div className='row'>
                 <h4>Conditions</h4>
                 <div className="grid">
-                  {/* Remaining conditions in the right column */}
                   {conditions.map((condition, index) => (
-                    <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'condition', condition.name, condition.tab)}>{condition.name}</div>
+                    <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'condition', condition.name, condition.tab)}>
+                      {/* display image coresponding to the condition */}
+                      <img src={conditionImage[condition.name as keyof typeof conditionImage]} alt={condition.name} width="60%" height="100%" />
+                    </div>
                   ))}
                 </div>
               </div>
@@ -239,16 +258,18 @@ const App = observer(() => {
               <div className='row'>
                 <h4>Actions</h4>
                 <div className="grid">
-                  {/* Remaining actions in the right column */}
                   {actions.map((action, index) => (
-                    <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'action', action, [])}>{action}</div>
+                    <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'action', action, [])}>
+                      {/* display image coresponding to the action */}
+                      <img src={actionImage[action as keyof typeof actionImage]} alt={action} width="60%" height="100%" />
+                    </div>
                   ))}
                 </div>
               </div>
           
             </div>
             
-            <div className='col-10'>
+            <div className='col-9'>
               <TreeManual lookUpTableCallback={getLookUpTable} />
             </div>
 
@@ -258,20 +279,13 @@ const App = observer(() => {
           // App state is AI
 
           <>
-            <div className='row'>
-              {/* Header */}
-              <div className='header'>
-                <h1>AI Control</h1>
-              </div>
-            </div>
-
             <div className='col-2'>
               <div className='row'>
                 {/* Mode buttons */}
                 <div className="modeButtons">
                   <p>Change mode</p>
                   <button onClick={() => setAppState('AI')}>AI</button>
-                  <button onClick={() => setAppState('Manual')}>Manual</button>
+                  <button onClick={() => setAppState('Manual')} style={{backgroundColor:'#0e3b634d'}}>Manual</button>
                 </div>
               </div>
 
@@ -298,7 +312,7 @@ const App = observer(() => {
 
             </div>
 
-            <div className='col-2'>
+            <div className='col-3'>
               {/* Display training data collected */}
               <div
                 style={{
@@ -307,6 +321,8 @@ const App = observer(() => {
                   justifyContent: 'center',
                   flexDirection: 'column',
                   width: '100%',
+                  maxHeight: '100vh',
+                  overflow: 'scroll',
                 }}
                 >
                   {data.map(({ action, captors }, index) => (
@@ -327,18 +343,9 @@ const App = observer(() => {
                 </div>
             </div>
 
-            <div className='col-6'>
+            <div className='col-6' style={{overflow:'auto'}}>
               <TreeAI data={treeData} renderTree={renderTree} />
             </div>
-
-            {/* Action Buttons */}
-            {/* <div style = {{padding: '2rem',}}>
-              <button onClick={() => handleClickAction('FORWARD')}>FORWARD</button>
-              <button onClick={() => handleClickAction('BACKWARD')}>BACKWARD</button>
-              <button onClick={() => handleClickAction('LEFT')}>LEFT</button>
-              <button onClick={() => handleClickAction('RIGHT')}>RIGHT</button>
-              <button onClick={() => handleClickAction('STOP')}>STOP</button>
-            </div> */}
 
           </>
 
