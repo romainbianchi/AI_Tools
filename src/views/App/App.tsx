@@ -279,16 +279,19 @@ const App = observer(() => {
           // App state is AI
 
           <>
-            <div className='col-2'>
-              <div className='row'>
-                {/* Mode buttons */}
+
+            <div className='row'>
+              <div className='col-11'></div>
+              <div className='col-1'>
                 <div className="modeButtons">
-                  <p>Change mode</p>
                   <button onClick={() => setAppState('AI')}>AI</button>
                   <button onClick={() => setAppState('Manual')} style={{backgroundColor:'#0e3b634d'}}>Manual</button>
                 </div>
               </div>
+            </div>
 
+            <div className='col-2'>
+              
               <div className='row'>
                 {/* Training Buttons */}
                 <div className='modeButtons'>

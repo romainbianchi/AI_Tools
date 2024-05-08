@@ -299,7 +299,6 @@ export class ThymioIA implements IThymioIA {
     for (let i = 0; i < lookUpTable.length; i++) {
       // Compare the sensor values
       var last_idx = lookUpTable[i].length-1;
-      console.log('last idx: ', last_idx)
       if (lookUpTable[i].slice(0, last_idx).every((value: number, index: number) => value === captors[index])) {
         // If they match, emit the corresponding action and return it
         const action = lookUpTable[i][last_idx];
