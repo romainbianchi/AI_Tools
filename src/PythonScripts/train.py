@@ -95,7 +95,7 @@ def train_model_sklearn():
     # Convert to dataframe
     df = pd.DataFrame(data)
     df.rename(columns={'captors': 'sensors'}, inplace=True)
-    df_sensors = pd.DataFrame(df['sensors'].values.tolist(), columns=[f'sensor {i}' for i in range(len(df['sensors'].iloc[0]))])
+    df_sensors = pd.DataFrame(df['sensors'].values.tolist(), columns=[f'sensor{i}' for i in range(len(df['sensors'].iloc[0]))])
     df = pd.concat([df.drop('sensors', axis=1), df_sensors], axis=1)
 
     # Train the model
