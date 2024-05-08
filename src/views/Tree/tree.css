@@ -1,6 +1,8 @@
 /* Adapted from React-Node-Flow: https://github.com/kumarabhishek008/React-Node-Flow/tree/master */
-.tree {
-    
+.tree_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .tree ul {

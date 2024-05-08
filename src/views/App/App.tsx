@@ -269,7 +269,7 @@ const App = observer(() => {
           
             </div>
             
-            <div className='col-9'>
+            <div className='col-9 tree_container'>
               <TreeManual lookUpTableCallback={getLookUpTable} />
             </div>
 
@@ -346,7 +346,7 @@ const App = observer(() => {
                 </div>
             </div>
 
-            <div className='col-6' style={{overflow:'auto'}}>
+            <div className='col-6 tree_container'>
               <TreeAI data={treeData} renderTree={renderTree} />
             </div>
 
