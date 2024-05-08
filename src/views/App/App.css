@@ -10,7 +10,7 @@
 
 [class*="col-"] {
   float: left;
-  padding: 15px;
+  padding: 20px;
 }
 
 .col-1 {width: 8.33%;}
@@ -41,10 +41,7 @@
 }
 
 #root {
-  /* max-width: 1280px; */
-  max-width: 2000px;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
   height: 100%;
 }
@@ -78,7 +75,7 @@
 }
 
 .card {
-  padding: 10em;
+  padding: 6em;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -136,7 +133,7 @@
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: rgba(95, 108, 121, 0.916);;
+  /* background-color: rgba(95, 108, 121, 0.916); */
   cursor: pointer;
   transition: border-color 0.25s;
   color: white;
@@ -158,5 +155,30 @@
 
 .modeButtons {
   display: grid;
+  grid-template-columns: repeat(2, 1fr);
   overflow: hidden;
+}
+
+.controlButtons {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  padding-left:15%;
+  padding-right:15%;
+}
+
+.titleLeftImage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top:5em;
+  padding-left:5em;
+  filter:opacity(0.8);
+}
+
+.titleRightImage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-right:10em;
+  filter:opacity(0.5);
 }

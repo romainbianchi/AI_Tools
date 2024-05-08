@@ -192,23 +192,39 @@ const App = observer(() => {
 
         <>
 
-          <div className='col-12 mainHeader'>
-            <h1>Decision Tree</h1>
-          </div>
-
-          <div className="col-12 card">
-            <button onClick={onClickGetRobots}>getRobots</button>
-            <button onClick={() => setwithoutRobot(true)}>Without Robot</button>
-          </div>
-
-          {robots.map((robot, index) => (
-            <div key={index} className="card">
-              <button onClick={() => onSelectRobot(robot)}>
-                <p>{robot}</p>
-              </button>
+          <div className='row'>
+            <div className='col-12 mainHeader'>
+              <h1>Decision Tree with Thymio</h1>
             </div>
-          ))}
+          </div>
+          
+          <div className='row'>
 
+            <div className='col-4 titleLeftImage'>
+              <img src='public/title_thymio.png' alt='ThymioTitle' width='85%' height='100%' />
+            </div>
+
+            <div className="col-4 card">
+              <button onClick={onClickGetRobots}>getRobots</button>
+              <button onClick={() => setwithoutRobot(true)}>Without Robot</button>
+            </div>
+
+            <div className='col-4'></div>
+
+          </div>
+
+          <div className='row'>
+            <div className='col-12' style={{height:'5vw'}}>
+              {robots.map((robot, index) => (
+                <div key={index}>
+                  <button onClick={() => onSelectRobot(robot)}>
+                    <p>{robot}</p>
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+          
         </>
 
       ) : (
@@ -218,7 +234,7 @@ const App = observer(() => {
           // App state is Manual
 
           <>
-            <div className='row'>
+            <div className='row' style={{backgroundColor:'#9A9483', height:'10vh'}}>
 
               <div className='col-3'>
                 {/* control Buttons */}
@@ -228,20 +244,20 @@ const App = observer(() => {
                 </div>
               </div>
 
-              <div className='col-8'></div>
+              <div className='col-7'></div>
 
 
-              <div className='col-1'>
+              <div className='col-2'>
                 {/* Mode Buttons */}
                 <div className="modeButtons">
-                  <button onClick={() => setAppState('AI')} style={{backgroundColor:'#0e3b634d'}}>AI</button>
+                  <button onClick={() => setAppState('AI')} style={{backgroundColor:'#3b3c3533'}}>AI</button>
                   <button onClick={() => setAppState('Manual')}>Manual</button>
                 </div>
               </div>
             </div>
 
 
-            <div className='col-3'>
+            <div className='col-3' style={{backgroundColor:'#9A9483', height:'90vh'}}>
 
               <div className='row'>
                 <h4>Conditions</h4>
@@ -269,8 +285,13 @@ const App = observer(() => {
           
             </div>
             
-            <div className='col-9 tree_container'>
-              <TreeManual lookUpTableCallback={getLookUpTable} />
+            <div className='col-9'>
+              <div className='row'>
+                <h2>Manual Decision Tree</h2>
+              </div>
+              <div className='row tree_container'>
+                <TreeManual lookUpTableCallback={getLookUpTable} />
+              </div>
             </div>
 
           </>
@@ -280,22 +301,22 @@ const App = observer(() => {
 
           <>
 
-            <div className='row'>
-              <div className='col-11'></div>
-              <div className='col-1'>
+            <div className='row' style={{backgroundColor:'#9A9483', height:'10vh'}}>
+              <div className='col-10'></div>
+              <div className='col-2'>
                 <div className="modeButtons">
                   <button onClick={() => setAppState('AI')}>AI</button>
-                  <button onClick={() => setAppState('Manual')} style={{backgroundColor:'#0e3b634d'}}>Manual</button>
+                  <button onClick={() => setAppState('Manual')} style={{backgroundColor:'#3b3c3533'}}>Manual</button>
                 </div>
               </div>
             </div>
 
-            <div className='col-2'>
+            <div className='col-3' style={{backgroundColor:'#9A9483', height:'90vh'}}>
               
               <div className='row'>
                 {/* Training Buttons */}
-                <div className='modeButtons'>
-                  <p>Control</p>
+                <div className='controlButtons'>
+                  <h4>Training</h4>
                   <button onClick={() => onTrain(data)}>Train</button>
                   <button onClick={() => onPredict()}>Predict</button>
                   <button onClick={() => onExecute()}>Execute</button>
@@ -305,49 +326,58 @@ const App = observer(() => {
               </div>
 
               <div className='row'>
-                <p>Actions</p>
-                <button onClick={() => handleClickAction('FORWARD')}>FORWARD</button>
+                < div className='row'>
+                  <h4>Indicate action by clicking on a button</h4>
+                </div>
+
+                <div className='row' style={{height: '50vh', overflow: 'scroll'}}>
+                  {/* Display training data collected */}
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexDirection: 'column',
+                      width: '100%',
+                      maxHeight: '100vh',
+                      overflow: 'scroll',
+                    }}
+                  >
+                    {data.map(({ action, captors }, index) => (
+                      <div
+                        key={index}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          width: '250px',
+                          height: '1.5rem',
+                        }}
+                      >
+                        <pre>{JSON.stringify(captors, null)}</pre>
+                        <p>{action}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* <button onClick={() => handleClickAction('FORWARD')}>FORWARD</button>
                 <button onClick={() => handleClickAction('BACKWARD')}>BACKWARD</button>
                 <button onClick={() => handleClickAction('LEFT')}>LEFT</button>
                 <button onClick={() => handleClickAction('RIGHT')}>RIGHT</button>
-                <button onClick={() => handleClickAction('STOP')}>STOP</button>
+                <button onClick={() => handleClickAction('STOP')}>STOP</button> */}
               </div>
 
             </div>
 
-            <div className='col-3'>
-              {/* Display training data collected */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexDirection: 'column',
-                  width: '100%',
-                  maxHeight: '100vh',
-                  overflow: 'scroll',
-                }}
-                >
-                  {data.map(({ action, captors }, index) => (
-                    <div
-                      key={index}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        width: '250px',
-                        height: '1.5rem',
-                      }}
-                    >
-                      <pre>{JSON.stringify(captors, null)}</pre>
-                      <p>{action}</p>
-                    </div>
-                  ))}
-                </div>
-            </div>
+            <div className='col-9'>
+              <div className='row'>
+                <h2>AI Decision Tree</h2>
+              </div>
 
-            <div className='col-6 tree_container'>
-              <TreeAI data={treeData} renderTree={renderTree} />
+              <div className='row tree_container'>
+                <TreeAI data={treeData} renderTree={renderTree} />
+              </div> 
             </div>
 
           </>

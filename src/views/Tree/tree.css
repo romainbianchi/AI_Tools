@@ -25,12 +25,12 @@
 .tree li::before, .tree li::after{
     content: '';
     position: absolute; top: 0; right: 50%;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid #847f72;
     width: 50%; height: 40px;
 }
 .tree li::after{
     right: auto; left: 50%;
-    border-left: 1px solid #ccc;
+    border-left: 1px solid #847f72;
 }
 .tree li::before{
     content:'';
@@ -51,7 +51,7 @@
     text-align: right;
     padding-right: 20px;
     padding-top: 10px;
-    border-right: 1px solid #ccc;
+    border-right: 1px solid #847f72;
     border-radius: 0 5px 0 0;
 }
 .tree li:first-child::after{
@@ -65,20 +65,23 @@
 .tree ul ul::before{
     content: '';
     position: absolute; top: 0; left: 50%;
-    border-left: 1px solid #ccc;
+    border-left: 1px solid #847f72;
     width: 0; height: 20px;
 }
 .tree li div{
-    border: 3px solid #ccc;
+    /* border: 3px solid #ccc; */
+    border: 2px solid #847f72;
     padding: 5px 0px;
     text-decoration: none;
     color: #666;
     font-family: arial, verdana, tahoma;
     font-size: 20px;
     display: inline-block;
-    height:100px;
-    width: 180px;
+    /* height:100px;
+    width: 160px; */
     /* height: 15%;
-    width: 30%; */
+    width: 20%; */
+    height: 5vw;
+    width: 8vw;
     border-radius: 10px;
 }

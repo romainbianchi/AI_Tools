@@ -4,9 +4,10 @@
   font-weight: 400;
 
   color-scheme:light dark;
-  color: rgba(48, 92, 131, 0.916);
+  color: rgba(59, 60, 53, 0.916);
   /* background-color: #fdf6dae6; */
-  background-color: #f9f9f9e6;
+  /* background-color: #f9f9f9e6; */
+  background-color: #AAA492;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -55,7 +56,8 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: rgba(14, 59, 99, 0.916);;
+  /* background-color: rgba(14, 59, 99, 0.916);; */
+  background-color: rgba(59, 60, 53, 0.916);
   cursor: pointer;
   transition: border-color 0.25s;
 }
