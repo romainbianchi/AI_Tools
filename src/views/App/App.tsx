@@ -27,22 +27,22 @@ const cond = [
 
 // Create a correspondances between actions and images
 const actionImage = {
-  'FORWARD': 'public/forward.png',
-  'BACKWARD': 'public/backward.png',
-  'LEFT': 'public/left.png',
-  'RIGHT': 'public/right.png',
-  'STOP': 'public/stop.png',
+  'FORWARD':  '/forward.png',
+  'BACKWARD': '/backward.png',
+  'LEFT':     '/left.png',
+  'RIGHT':    '/right.png',
+  'STOP':     '/stop.png',
 }
 
 // Create a correspondances between conditions and images
 const conditionImage = {
-  'sensor0': 'public/sensor0.png',
-  'sensor1': 'public/sensor1.png',
-  'sensor2': 'public/sensor2.png',
-  'sensor3': 'public/sensor3.png',
-  'sensor4': 'public/sensor4.png',
-  'sensor5': 'public/sensor5.png',
-  'sensor6': 'public/sensor6.png',
+  'sensor0': '/sensor0.png',
+  'sensor1': '/sensor1.png',
+  'sensor2': '/sensor2.png',
+  'sensor3': '/sensor3.png',
+  'sensor4': '/sensor4.png',
+  'sensor5': '/sensor5.png',
+  'sensor6': '/sensor6.png',
 }
 
 const App = observer(() => {
