@@ -68,11 +68,13 @@
 }
 .tree li div{
     border: 3px solid #ccc;
-    padding: 5px 60px;
+    padding: 5px 0px;
     text-decoration: none;
     color: #666;
     font-family: arial, verdana, tahoma;
     font-size: 20px;
     display: inline-block;
+    height:100px;
+    width: 180px;
     border-radius: 10px;
 }
