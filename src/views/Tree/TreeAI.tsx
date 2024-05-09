@@ -3,7 +3,7 @@ import './tree.css'
 import { set } from "mobx";
 
 // Correspondances between actions/conditions and images
-const actCondImages = {
+const actCondImages: { [key: string]: any } = {
     'FORWARD':  '/forward.png',
     'BACKWARD': '/backward.png',
     'LEFT':     '/left.png',
@@ -29,7 +29,7 @@ const treeRendering = (treeData: any) => {
                 treeData.map((item: any)=>                
                     <li key={item.id} className={item.text+item.id}>
                         <div>
-                        <img src={actCondImages[item.text as keyof typeof actionImage]} alt={item.text} width="75%" height="100%" />
+                        <img src={actCondImages[`${item.text}`]} alt={item.text} width="75%" height="100%" />
                         </div>
                         {
                             item.children && item.children.length ?
