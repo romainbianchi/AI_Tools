@@ -5,7 +5,7 @@
 .row::after {
   content: "";
   clear: both;
-  display: table;
+  display: table;;
 }
 
 [class*="col-"] {
@@ -181,4 +181,10 @@
   align-items: center;
   padding-right:10em;
   filter:opacity(0.5);
+}
+
+.smallHeaderBox {
+  box-shadow: 0 5px 2px -2px rgba(59, 60, 53, 0.916);
+  background-color: #3b3c3533;
+  border-radius: 8px;
 }

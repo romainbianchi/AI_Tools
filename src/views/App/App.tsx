@@ -260,7 +260,9 @@ const App = observer(() => {
             <div className='col-3' style={{backgroundColor:'#9A9483', height:'90vh'}}>
 
               <div className='row'>
-                <h4>Conditions</h4>
+                <div className='smallHeaderBox'>
+                  <h4>Conditions</h4>
+                </div>
                 <div className="grid">
                   {conditions.map((condition, index) => (
                     <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'condition', condition.name, condition.tab)}>
@@ -272,7 +274,9 @@ const App = observer(() => {
               </div>
 
               <div className='row'>
-                <h4>Actions</h4>
+              <div className='smallHeaderBox'>
+                  <h4>Actions</h4>
+                </div>
                 <div className="grid">
                   {actions.map((action, index) => (
                     <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'action', action, [])}>

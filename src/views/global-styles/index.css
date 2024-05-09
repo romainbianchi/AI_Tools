@@ -58,11 +58,12 @@ button {
   font-family: inherit;
   /* background-color: rgba(14, 59, 99, 0.916);; */
   background-color: rgba(59, 60, 53, 0.916);
+  box-shadow: 0 5px 5px -3px black;
   cursor: pointer;
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #abb0ff;
+  border-color: #b6ad85;
 }
 button:focus,
 button:focus-visible {
