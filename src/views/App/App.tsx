@@ -318,9 +318,12 @@ const App = observer(() => {
             <div className='col-3' style={{backgroundColor:'#9A9483', height:'90vh'}}>
               
               <div className='row'>
+                <div className='smallHeaderBox'>
+                  <h4>Training</h4>
+                </div>
+
                 {/* Training Buttons */}
                 <div className='controlButtons'>
-                  <h4>Training</h4>
                   <button onClick={() => onTrain(data)}>Train</button>
                   <button onClick={() => onPredict()}>Predict</button>
                   <button onClick={() => onExecute()}>Execute</button>
@@ -331,7 +334,9 @@ const App = observer(() => {
 
               <div className='row'>
                 < div className='row'>
-                  <h4>Indicate action by clicking on a button</h4>
+                  <div className='smallHeaderBox'>
+                    <h4>Indicate action by clicking on a button</h4>
+                  </div>
                 </div>
 
                 <div className='row' style={{height: '50vh', overflow: 'scroll'}}>
@@ -345,9 +350,10 @@ const App = observer(() => {
                       width: '100%',
                       maxHeight: '100vh',
                       overflow: 'scroll',
+                      fontSize: '0.8rem',
                     }}
                   >
-                    {data.map(({ action, captors }, index) => (
+                    {/* {data.map(({ action, captors }, index) => (
                       <div
                         key={index}
                         style={{
@@ -361,7 +367,33 @@ const App = observer(() => {
                         <pre>{JSON.stringify(captors, null)}</pre>
                         <p>{action}</p>
                       </div>
-                    ))}
+                    ))} */}
+                    {/* Display values in a table */}
+                    <table>
+                      <thead>
+                        <tr>
+                          <th><img src='/public/sensor0.png' width='100%'/></th>
+                          <th><img src='/public/sensor1.png' width='100%'/></th>
+                          <th><img src='/public/sensor2.png' width='100%'/></th>
+                          <th><img src='/public/sensor3.png' width='100%'/></th>
+                          <th><img src='/public/sensor4.png' width='100%'/></th>
+                          <th><img src='/public/sensor5.png' width='100%'/></th>
+                          <th><img src='/public/sensor6.png' width='100%'/></th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {data.map(({ action, captors }, index) => (
+                        <tr key={index}>
+                          {captors.map((captor, i) => (
+                            <td key={i}>{captor}</td>
+                          ))}
+                          {/* <td>{action}</td> */}
+                          <td><img src={actionImage[action as keyof typeof actionImage]} alt={action} width="100%"/></td>
+                        </tr>
+                      ))}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
 
