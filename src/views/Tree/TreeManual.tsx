@@ -20,7 +20,7 @@ const actCondImages = {
     'sensor4':  '/sensor4.png',
     'sensor5':  '/sensor5.png',
     'sensor6':  '/sensor6.png',
-    'Condition or Action': '/transparent2.png',
+    'Condition or Action': '/transparent.png',
 }
 
 
@@ -35,7 +35,7 @@ const manualTreeRendering = (ManualTreeData: any, handleOnDropInTree:(e:React.Dr
               ManualTreeData.map((item: any)=>
                   <li key={item.id} className={item.text+item.id}>
                       <div data-id={item.id} onDrop={(e) => handleOnDropInTree(e)} onDragOver={(e) => e.preventDefault()}>
-                        <img src={actCondImages[item.text as keyof typeof actionImage]} alt={item.text} width="72%" height="100%" />
+                        <img src={actCondImages[item.text as keyof typeof actionImage]} alt={item.text} width="75%" height="100%" />
                       </div>
                       {
                           item.children && item.children.length ?

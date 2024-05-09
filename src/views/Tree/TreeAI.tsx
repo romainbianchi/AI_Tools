@@ -16,7 +16,7 @@ const actCondImages = {
     'sensor4':  '/sensor4.png',
     'sensor5':  '/sensor5.png',
     'sensor6':  '/sensor6.png',
-    'Condition or Action': '/transparent3.png',
+    'Condition or Action': '/transparent.png',
 }
 
 /* adapted from React-Node-Flow: https://github.com/kumarabhishek008/React-Node-Flow/tree/master */
