@@ -226,7 +226,7 @@ export class ThymioIA implements IThymioIA {
     const jsonData = JSON.stringify(data);
 
     // Send the data to the Python script using Flask
-    const response = await fetch('http://127.0.0.1:5000/train', {
+    const response = await fetch('http://128.179.199.236:5001/train', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -250,7 +250,7 @@ export class ThymioIA implements IThymioIA {
     const jsonData = JSON.stringify(data);
 
     // Send the data to the Python script using Flask
-    const response = await fetch('http://127.0.0.1:5000/trainsklearn', {
+    const response = await fetch('http://128.179.199.236:5001/trainsklearn', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -274,7 +274,7 @@ export class ThymioIA implements IThymioIA {
     const jsonData = JSON.stringify(captors);
 
     // Send the data to the Python script using Flask
-    const response = await fetch('http://127.0.0.1:5000/predict', {
+    const response = await fetch('http://128.179.199.236:5001/predict', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

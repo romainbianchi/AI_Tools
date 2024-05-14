@@ -49,7 +49,7 @@ const App = observer(() => {
 
 
   // ----------------- States -----------------
-  const [appState, setAppState] = useState<string>('AI'); // State of the app
+  const [appState, setAppState] = useState<string>('Manual'); // State of the app
   const [robots, setRobots] = useState<string[]>([]);
   const [controledRobot, setControledRobot] = useState<string>('');
   const [withoutRobot, setwithoutRobot] = useState<boolean>(false); // Used to develop without the robot
@@ -111,26 +111,28 @@ const App = observer(() => {
 
   // Detect when button is pressed
   useEffect(() => {
-    // select action according to the button pressed
-    switch (user.button.state[controledRobot]) {
-      case 'forward':
-        handleClickAction('FORWARD');
-        break;
-      case 'left':
-        handleClickAction('LEFT');
-        break;
-      case 'backward':
-        handleClickAction('BACKWARD');
-        break;
-      case 'right':
-        handleClickAction('RIGHT');
-        break;
-      case 'center':
-        handleClickAction('STOP');
-        break;
-      // default
-      default:
-        break;
+    if (appState == 'AI') {
+      // select action according to the button pressed
+      switch (user.button.state[controledRobot]) {
+        case 'forward':
+          handleClickAction('FORWARD');
+          break;
+        case 'left':
+          handleClickAction('LEFT');
+          break;
+        case 'backward':
+          handleClickAction('BACKWARD');
+          break;
+        case 'right':
+          handleClickAction('RIGHT');
+          break;
+        case 'center':
+          handleClickAction('STOP');
+          break;
+        // default
+        default:
+          break;
+      }
     }
   }, [user.button.state]);
 
@@ -325,7 +327,7 @@ const App = observer(() => {
                 {/* Training Buttons */}
                 <div className='controlButtons'>
                   <button onClick={() => onTrain(data)}>Train</button>
-                  <button onClick={() => onPredict()}>Predict</button>
+                  {/* <button onClick={() => onPredict()}>Predict</button> */}
                   <button onClick={() => onExecute()}>Execute</button>
                   <button onClick={() => onClear()}>Clear</button>
                   <button onClick={() => onStop()}>Stop</button>
@@ -389,7 +391,8 @@ const App = observer(() => {
                             <td key={i}>{captor}</td>
                           ))}
                           {/* <td>{action}</td> */}
-                          <td><img src={actionImage[action as keyof typeof actionImage]} alt={action} width="100%"/></td>
+                          {/* <td><img src={actionImage[action as keyof typeof actionImage]} alt={action} width="100%"/></td> */}
+                          <td>{action}</td>
                         </tr>
                       ))}
                       </tbody>
