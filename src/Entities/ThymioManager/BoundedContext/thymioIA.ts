@@ -26,6 +26,8 @@ export class ThymioIA implements IThymioIA {
     RIGHT: 4,
   };
 
+  ip_address = '128.179.196.57'
+
   constructor({ activity, hosts }: { activity: Activity; hosts: string[] }) {
     const tdmController = Container.factoryFromInjectable<TdmController>('SERVICE', 'HostController', ['thymio2'], {
       hosts,
@@ -226,7 +228,7 @@ export class ThymioIA implements IThymioIA {
     const jsonData = JSON.stringify(data);
 
     // Send the data to the Python script using Flask
-    const response = await fetch('http://128.179.199.236:5001/train', {
+    const response = await fetch(`http://${this.ip_address}/train`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -250,7 +252,7 @@ export class ThymioIA implements IThymioIA {
     const jsonData = JSON.stringify(data);
 
     // Send the data to the Python script using Flask
-    const response = await fetch('http://128.179.199.236:5001/trainsklearn', {
+    const response = await fetch(`http://${this.ip_address}/trainsklearn`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -274,7 +276,7 @@ export class ThymioIA implements IThymioIA {
     const jsonData = JSON.stringify(captors);
 
     // Send the data to the Python script using Flask
-    const response = await fetch('http://128.179.199.236:5001/predict', {
+    const response = await fetch(`http://${this.ip_address}/predict`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
