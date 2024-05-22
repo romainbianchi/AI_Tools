@@ -10,6 +10,7 @@ import { emit } from 'xstate';
 // components
 import TreeAI from '../Tree/TreeAI';
 import TreeManual from '../Tree/TreeManual';
+import LayeredImage from '../Img_layers/LayeredImage';
 
 const user = thymioManagerFactory({ user: 'AllUser', activity: 'ThymioIA', hosts: ['localhost'] });
 
@@ -44,6 +45,18 @@ const conditionImage = {
   'sensor5': '/sensor5.png',
   'sensor6': '/sensor6.png',
 }
+
+// Layers for the LayeredImage component
+const layers = [
+  { src: '/public/layerBase.png' },
+  { src: 'public/Layer0.png' },
+  { src: 'public/Layer1.png' },
+  { src: 'public/Layer2.png' },
+  { src: 'public/Layer3.png' },
+  { src: 'public/Layer4.png' },
+  { src: 'public/Layer5.png' },
+  { src: 'public/Layer6.png' },
+];
 
 const App = observer(() => {
 
@@ -152,7 +165,7 @@ const App = observer(() => {
     // add new data when click on the action
     setData([...data, { action, captors: user.captors.state[controledRobot].slice(2) }]); // slice to remove the first two elements of the captors (ground sensors)
     // emit event to the robot
-    await user.emitMotorEvent(controledRobot, action, true);
+    // await user.emitMotorEvent(controledRobot, action, true);
   }
 
   const onTrain = async (data: { action: string; captors: number[] }[]) => {
@@ -163,10 +176,6 @@ const App = observer(() => {
     setTreeData(tree);
     // Set the renderTree to true
     setRenderTree(true);
-  }
-
-  const onPredict = async () => {
-    await user.predictDecisionTree(controledRobot, user.captors.state[controledRobot].slice(2)); // slice to remove the first two elements of the captors (ground sensors)
   }
 
   const onClear = () => {
@@ -236,7 +245,7 @@ const App = observer(() => {
           // App state is Manual
 
           <>
-            <div className='row' style={{backgroundColor:'#9A9483', height:'10vh'}}>
+            <div className='row' style={{backgroundColor:'#9A9483', height:'13vh'}}>
 
               <div className='col-3'>
                 {/* control Buttons */}
@@ -259,7 +268,7 @@ const App = observer(() => {
             </div>
 
 
-            <div className='col-3' style={{backgroundColor:'#9A9483', height:'90vh'}}>
+            <div className='col-3' style={{backgroundColor:'#9A9483', height:'87vh'}}>
 
               <div className='row'>
                 <div className='smallHeaderBox'>
@@ -292,9 +301,6 @@ const App = observer(() => {
             </div>
             
             <div className='col-9'>
-              <div className='row'>
-                <h2>Manual Decision Tree</h2>
-              </div>
               <div className='row tree_container'>
                 <TreeManual lookUpTableCallback={getLookUpTable} />
               </div>
@@ -307,25 +313,9 @@ const App = observer(() => {
 
           <>
 
-            <div className='row' style={{backgroundColor:'#9A9483', height:'10vh'}}>
-              <div className='col-10'></div>
-              <div className='col-2'>
-                <div className="modeButtons">
-                  <button onClick={() => setAppState('AI')}>AI</button>
-                  <button onClick={() => setAppState('Manual')} style={{backgroundColor:'#3b3c3533'}}>Manual</button>
-                </div>
-              </div>
-            </div>
-
-            <div className='col-3' style={{backgroundColor:'#9A9483', height:'90vh'}}>
-              
-              <div className='row'>
-                <div className='smallHeaderBox'>
-                  <h4>Training</h4>
-                </div>
-
-                {/* Training Buttons */}
-                <div className='controlButtons'>
+            <div className='row' style={{backgroundColor:'#9A9483', height:'13vh'}}>
+              <div className='col-3'>
+                <div className='trainingButtons'>
                   <button onClick={() => onTrain(data)}>Train</button>
                   {/* <button onClick={() => onPredict()}>Predict</button> */}
                   <button onClick={() => onExecute()}>Execute</button>
@@ -334,6 +324,17 @@ const App = observer(() => {
                 </div>
               </div>
 
+              <div className='col-7'></div>
+              <div className='col-2'>
+                <div className="modeButtons">
+                  <button onClick={() => setAppState('AI')}>AI</button>
+                  <button onClick={() => setAppState('Manual')} style={{backgroundColor:'#3b3c3533'}}>Manual</button>
+                </div>
+              </div>
+            </div>
+
+            <div className='col-3' style={{backgroundColor:'#9A9483', height:'87vh'}}>
+
               <div className='row'>
                 < div className='row'>
                   <div className='smallHeaderBox'>
@@ -341,57 +342,35 @@ const App = observer(() => {
                   </div>
                 </div>
 
-                <div className='row' style={{height: '50vh', overflow: 'scroll'}}>
+                {/* Seperate table header, allow to avoid hidding the header when scrolling in the table */}
+                <div className='row' style={{marginBottom:'1vh'}}>
+                  <table style={{width:'100%', height:'100%'}}>
+                    <thead>
+                      <tr>
+                        <th style={{width:'50%'}}>Sensors</th>
+                        <th style={{width:'50%'}}>Action</th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+
+                {/* Table body */}
+                <div className='row' style={{height: '76vh', overflow: 'scroll'}}>
                   {/* Display training data collected */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexDirection: 'column',
-                      width: '100%',
-                      maxHeight: '100vh',
-                      overflow: 'scroll',
-                      fontSize: '0.8rem',
-                    }}
-                  >
-                    {/* {data.map(({ action, captors }, index) => (
-                      <div
-                        key={index}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          width: '250px',
-                          height: '1.5rem',
-                        }}
-                      >
-                        <pre>{JSON.stringify(captors, null)}</pre>
-                        <p>{action}</p>
-                      </div>
-                    ))} */}
-                    {/* Display values in a table */}
-                    <table>
+                  <div className='customTable'>
+                    <table style={{width:'100%', height:'100%'}}>
                       <thead>
                         <tr>
-                          <th><img src='/public/sensor0.png' width='100%'/></th>
-                          <th><img src='/public/sensor1.png' width='100%'/></th>
-                          <th><img src='/public/sensor2.png' width='100%'/></th>
-                          <th><img src='/public/sensor3.png' width='100%'/></th>
-                          <th><img src='/public/sensor4.png' width='100%'/></th>
-                          <th><img src='/public/sensor5.png' width='100%'/></th>
-                          <th><img src='/public/sensor6.png' width='100%'/></th>
-                          <th>Action</th>
+                          <th style={{width:'50%'}}></th>
+                          <th style={{width:'50%'}}></th>
                         </tr>
                       </thead>
                       <tbody>
                       {data.map(({ action, captors }, index) => (
                         <tr key={index}>
-                          {captors.map((captor, i) => (
-                            <td key={i}>{captor}</td>
-                          ))}
-                          {/* <td>{action}</td> */}
-                          {/* <td><img src={actionImage[action as keyof typeof actionImage]} alt={action} width="100%"/></td> */}
+                           <td>
+                            <LayeredImage visibleLayers={captors}/>
+                          </td>
                           <td>{action}</td>
                         </tr>
                       ))}
