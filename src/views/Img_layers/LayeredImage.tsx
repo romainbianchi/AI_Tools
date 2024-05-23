@@ -46,7 +46,6 @@ const LayeredImage: React.FC<LayeredImageProps> = ({ visibleLayers }) => {
           // Draw layers on top of the base layer
           for (let layerIndex=0; layerIndex < layers.length; layerIndex++) {
             if (visibleLayers[layerIndex] === 1) {
-              console.log(layers[layerIndex])
               try {
                 const img = await loadImage(layers[layerIndex].src);
                 context.drawImage(img, 0, 0, canvas.width, canvas.height);
@@ -54,16 +53,6 @@ const LayeredImage: React.FC<LayeredImageProps> = ({ visibleLayers }) => {
                 console.error(`Failed to load image at ${layers[layerIndex].src}`, error);
               }
             }
-
-
-            // if (layerIndex < layers.length) {
-            //   try {
-            //     const img = await loadImage(layers[layerIndex].src);
-            //     context.drawImage(img, 0, 0);
-            //   } catch (error) {
-            //     console.error(`Failed to load image at ${layers[layerIndex].src}`, error);
-            //   }
-            // }
           }
         };
 

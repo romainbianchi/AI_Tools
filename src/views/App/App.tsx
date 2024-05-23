@@ -89,6 +89,12 @@ const App = observer(() => {
   const onClickGetRobots = async () => {
     const _robots = await user.getRobotsUuids();
     setRobots(_robots);
+    if (_robots.length > 0){
+      onSelectRobot(_robots[0]);
+    }else{
+      alert('No robot found');
+    }
+    
   };
 
   const onSelectRobot = async (robotUuid: string) => {
@@ -99,6 +105,26 @@ const App = observer(() => {
   const onExecute = async () => {
     setMode('PREDICT');
   };
+
+  // reload page if robot is disconnected
+  // useEffect(() => {
+  //   const checkRobots = async () => {
+  //     console.log('Checking robots');
+  //     user.getRobotsUuids();
+  //     try {
+  //       const robotsCheck = await user.getRobotsUuids();
+  //       if (robotsCheck.length === 0 && controledRobot !== ''){
+  //         window.location.reload();
+  //       }
+  //     }catch (error) {
+  //       console.error('Error while checking robots', error);
+  //     }
+  //   }
+  //   const interval = setInterval(() => {
+  //     checkRobots();
+  //   }, 3000);
+  //   return () => clearInterval(interval);
+  // });
 
   useEffect(() => {
     if (mode === 'PREDICT') {
@@ -216,24 +242,12 @@ const App = observer(() => {
             </div>
 
             <div className="col-4 card">
-              <button onClick={onClickGetRobots}>getRobots</button>
+              <button onClick={onClickGetRobots}>Start the activity</button>
               <button onClick={() => setwithoutRobot(true)}>Without Robot</button>
             </div>
 
             <div className='col-4'></div>
 
-          </div>
-
-          <div className='row'>
-            <div className='col-12' style={{height:'5vw'}}>
-              {robots.map((robot, index) => (
-                <div key={index}>
-                  <button onClick={() => onSelectRobot(robot)}>
-                    <p>{robot}</p>
-                  </button>
-                </div>
-              ))}
-            </div>
           </div>
           
         </>

@@ -15,7 +15,7 @@ app = Flask(__name__)
 cors = CORS(app, resources={r"*": {"origins": "*"}})
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-ip_address = '128.179.196.57'
+ip_address = '172.20.10.13'
 
 
 
