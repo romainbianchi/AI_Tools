@@ -26,7 +26,7 @@ export class ThymioIA implements IThymioIA {
     RIGHT: 4,
   };
 
-  ip_address = '172.20.10.13'
+  ip_address = '127.0.0.1:5000'
 
   constructor({ activity, hosts }: { activity: Activity; hosts: string[] }) {
     const tdmController = Container.factoryFromInjectable<TdmController>('SERVICE', 'HostController', ['thymio2'], {

@@ -61,7 +61,7 @@ const LayeredImage: React.FC<LayeredImageProps> = ({ visibleLayers }) => {
     }
   }, []); // Empty dependency array to ensure this runs only once on mount
 
-  return <canvas ref={canvasRef} width={150} height={100}></canvas>;
+  return <canvas ref={canvasRef} style={{width:'7vw', height:'5vw'}}></canvas>;
 };
 
 export default LayeredImage;

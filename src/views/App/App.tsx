@@ -259,7 +259,7 @@ const App = observer(() => {
           // App state is Manual
 
           <>
-            <div className='row' style={{backgroundColor:'#9A9483', height:'13vh'}}>
+            <div className='row' style={{backgroundColor:'#9A9483', height:'10%'}}>
 
               <div className='col-3'>
                 {/* control Buttons */}
@@ -281,42 +281,43 @@ const App = observer(() => {
               </div>
             </div>
 
+            <div className='row' style={{height:'90%'}}>
+              <div className='col-3' style={{backgroundColor:'#9A9483', height:'100%'}}>
 
-            <div className='col-3' style={{backgroundColor:'#9A9483', height:'87vh'}}>
+                <div className='row'>
+                  <div className='smallHeaderBox'>
+                    <h4>Conditions</h4>
+                  </div>
+                  <div className="grid">
+                    {conditions.map((condition, index) => (
+                      <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'condition', condition.name, condition.tab)}>
+                        {/* display image coresponding to the condition */}
+                        <img src={conditionImage[condition.name as keyof typeof conditionImage]} alt={condition.name} width="60%" height="100%" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
-              <div className='row'>
+                <div className='row'>
                 <div className='smallHeaderBox'>
-                  <h4>Conditions</h4>
+                    <h4>Actions</h4>
+                  </div>
+                  <div className="grid">
+                    {actions.map((action, index) => (
+                      <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'action', action, [])}>
+                        {/* display image coresponding to the action */}
+                        <img src={actionImage[action as keyof typeof actionImage]} alt={action} width="60%" height="100%" />
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="grid">
-                  {conditions.map((condition, index) => (
-                    <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'condition', condition.name, condition.tab)}>
-                      {/* display image coresponding to the condition */}
-                      <img src={conditionImage[condition.name as keyof typeof conditionImage]} alt={condition.name} width="60%" height="100%" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className='row'>
-              <div className='smallHeaderBox'>
-                  <h4>Actions</h4>
-                </div>
-                <div className="grid">
-                  {actions.map((action, index) => (
-                    <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'action', action, [])}>
-                      {/* display image coresponding to the action */}
-                      <img src={actionImage[action as keyof typeof actionImage]} alt={action} width="60%" height="100%" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-          
-            </div>
             
-            <div className='col-9'>
-              <div className='row tree_container'>
-                <TreeManual lookUpTableCallback={getLookUpTable} />
+              </div>
+              
+              <div className='col-9'>
+                <div className='row tree_container'>
+                  <TreeManual lookUpTableCallback={getLookUpTable} />
+                </div>
               </div>
             </div>
 
@@ -327,11 +328,10 @@ const App = observer(() => {
 
           <>
 
-            <div className='row' style={{backgroundColor:'#9A9483', height:'13vh'}}>
+            <div className='row' style={{backgroundColor:'#9A9483', height:'10%'}}>
               <div className='col-3'>
                 <div className='trainingButtons'>
                   <button onClick={() => onTrain(data)}>Train</button>
-                  {/* <button onClick={() => onPredict()}>Predict</button> */}
                   <button onClick={() => onExecute()}>Execute</button>
                   <button onClick={() => onClear()}>Clear</button>
                   <button onClick={() => onStop()}>Stop</button>
@@ -347,69 +347,71 @@ const App = observer(() => {
               </div>
             </div>
 
-            <div className='col-3' style={{backgroundColor:'#9A9483', height:'87vh'}}>
+            <div className='row' style={{height:'90%'}}>
 
-              <div className='row'>
-                < div className='row'>
-                  <div className='smallHeaderBox'>
-                    <h4>Indicate action by clicking on a button</h4>
+              <div className='col-3' style={{backgroundColor:'#9A9483', height:'100%'}}>
+
+                {/* <div className='row'> */}
+                  < div className='row' style={{height:'5%'}}>
+                    <div className='smallHeaderBox'>
+                      <h4>Indicate action by clicking on a button</h4>
+                    </div>
                   </div>
-                </div>
 
-                {/* Seperate table header, allow to avoid hidding the header when scrolling in the table */}
-                <div className='row' style={{marginBottom:'1vh'}}>
-                  <table style={{width:'100%', height:'100%'}}>
-                    <thead>
-                      <tr>
-                        <th style={{width:'50%'}}>Sensors</th>
-                        <th style={{width:'50%'}}>Action</th>
-                      </tr>
-                    </thead>
-                  </table>
-                </div>
-
-                {/* Table body */}
-                <div className='row' style={{height: '76vh', overflow: 'scroll'}}>
-                  {/* Display training data collected */}
-                  <div className='customTable'>
+                  {/* Seperate table header, allow to avoid hidding the header when scrolling in the table */}
+                  <div className='row' style={{ height:'5%'}}>
                     <table style={{width:'100%', height:'100%'}}>
                       <thead>
                         <tr>
-                          <th style={{width:'50%'}}></th>
-                          <th style={{width:'50%'}}></th>
+                          <th style={{width:'50%'}}>Sensors</th>
+                          <th style={{width:'50%'}}>Action</th>
                         </tr>
                       </thead>
-                      <tbody>
-                      {data.map(({ action, captors }, index) => (
-                        <tr key={index}>
-                           <td>
-                            <LayeredImage visibleLayers={captors}/>
-                          </td>
-                          <td>{action}</td>
-                        </tr>
-                      ))}
-                      </tbody>
                     </table>
                   </div>
-                </div>
 
-                {/* <button onClick={() => handleClickAction('FORWARD')}>FORWARD</button>
-                <button onClick={() => handleClickAction('BACKWARD')}>BACKWARD</button>
-                <button onClick={() => handleClickAction('LEFT')}>LEFT</button>
-                <button onClick={() => handleClickAction('RIGHT')}>RIGHT</button>
-                <button onClick={() => handleClickAction('STOP')}>STOP</button> */}
+                  {/* Table body */}
+                  <div className='row' style={{height:'88%'}}>
+                    {/* Display training data collected */}
+                    <div className='customTable'>
+                      <table style={{width:'100%'}}>
+                        <thead>
+                          <tr>
+                            <th style={{width:'50%'}}></th>
+                            <th style={{width:'50%'}}></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        {data.map(({ action, captors }, index) => (
+                          <tr key={index}>
+                            {/* Image that shows all the sensor activated*/}
+                            <td>
+                              <LayeredImage visibleLayers={captors}/>
+                            </td>
+                            {/* image of the action */}
+                            <td style={{display:'flex', justifyContent:'center'}}>
+                              <div style={{width:'7vw', height:'6vw'}}>
+                                <img src={actionImage[action as keyof typeof actionImage]} alt={action} style={{width:'100%', height:'100%'}}/>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
               </div>
 
-            </div>
+              <div className='col-9'>
+                  <div className='row'>
+                    <h2>AI Decision Tree</h2>
+                  </div>
 
-            <div className='col-9'>
-              <div className='row'>
-                <h2>AI Decision Tree</h2>
+                  <div className='row tree_container'>
+                    <TreeAI data={treeData} renderTree={renderTree} />
+                  </div> 
               </div>
 
-              <div className='row tree_container'>
-                <TreeAI data={treeData} renderTree={renderTree} />
-              </div> 
             </div>
 
           </>
