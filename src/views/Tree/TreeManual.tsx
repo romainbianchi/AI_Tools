@@ -64,19 +64,17 @@ const emptyEmptyOnceCellTree = [
     }
 ]
 
+// Variable used to avoid reinitializing the tree when the component is re-rendered
+var treeData = emptyEmptyOnceCellTree;
+
+// Function to create the look-up table
 const createLookUpTable = (treeData: any) => {
 
-    // Create an array to hold all possible entries
+    // Create all possible entries for the look-up table
     const allPossibleEntries = [];
-    // Loop through each decimal number from 0 to 511
     for (let i = 0; i < (2**7); i++) {
-        // Convert the decimal number to its binary representation
         const binaryString = i.toString(2).padStart(7, '0');
-        
-        // Convert the binary string to an array of numbers
         const entryArray = binaryString.split('').map(Number);
-        
-        // Push the array to the allPossibleEntries array
         allPossibleEntries.push([...entryArray]);
     }
 
@@ -125,13 +123,13 @@ const createLookUpTable = (treeData: any) => {
 
 const TreeManual =({lookUpTableCallback}:{lookUpTableCallback:any}) => {
 
-const treeRef = useRef<HTMLDivElement>(null);
+    const treeRef = useRef<HTMLDivElement>(null);
 
-// Tree elements
-  const [manualTreeData, setManualTreeData] = useState<any>(emptyEmptyOnceCellTree); //Data of the manually created tree
-  const [maxId, setMaxId] = useState(1); // Maximum id of the manual tree elements, allows to create unique ids for each element
+    // Tree elements
+    const [manualTreeData, setManualTreeData] = useState<any>(treeData); //Data of the manually created tree
+    const [maxId, setMaxId] = useState(1); // Maximum id of the manual tree elements, allows to create unique ids for each element
 
-// Functions
+    // Functions
 
     // Count number of elements in the tree
     const countElements = (treeData: any) => {
@@ -206,6 +204,7 @@ const treeRef = useRef<HTMLDivElement>(null);
         }
 
         setManualTreeData(newManualTreeData);
+        treeData = newManualTreeData;
     }
 
     // helper function to recursively update the children in the tree
@@ -268,8 +267,8 @@ const treeRef = useRef<HTMLDivElement>(null);
         lookUpTableCallback(lookUpTable);
     }, [manualTreeData]);
 
+    
     // Render
-
     return (
         <div className="tree" ref={treeRef} onDrop={(event)=> {event.preventDefault()}}>
             {manualTreeRendering(manualTreeData, handleOnDropInTree)}

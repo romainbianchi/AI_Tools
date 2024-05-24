@@ -220,6 +220,16 @@ const App = observer(() => {
     setMode('MANUALCONTROL');
   }
 
+  const changeMode = async () => {
+    await onStop();
+    console.log(mode)
+    if (appState == 'Manual'){
+      setAppState('AI');
+    }else{
+      setAppState('Manual');
+    }
+  }
+
 
   // ----------------- Render -----------------
   return (
@@ -276,8 +286,8 @@ const App = observer(() => {
               <div className='col-2'>
                 {/* Mode Buttons */}
                 <div className="modeButtons">
-                  <button onClick={() => setAppState('AI')} style={{backgroundColor:'#3b3c3533'}}>AI</button>
-                  <button onClick={() => setAppState('Manual')}>Manual</button>
+                  <button onClick={() => changeMode()} style={{backgroundColor:'#3b3c3533'}}>AI</button>
+                  <button onClick={() => changeMode()}>Manual</button>
                 </div>
               </div>
             </div>
@@ -344,8 +354,8 @@ const App = observer(() => {
               <div className='col-7'></div>
               <div className='col-2'>
                 <div className="modeButtons">
-                  <button onClick={() => setAppState('AI')}>AI</button>
-                  <button onClick={() => setAppState('Manual')} style={{backgroundColor:'#3b3c3533'}}>Manual</button>
+                  <button onClick={() => changeMode()}>AI</button>
+                  <button onClick={() => changeMode()} style={{backgroundColor:'#3b3c3533'}}>Manual</button>
                 </div>
               </div>
             </div>
