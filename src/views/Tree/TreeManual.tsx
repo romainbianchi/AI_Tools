@@ -1,6 +1,7 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useRef} from 'react';
 import './tree.css';
 import { all } from '@tensorflow/tfjs';
+import { set } from 'mobx';
 
 interface TreeManualProps {
     lookUpTableCallback: () => void; // Define the type of lookUpTableCallback
@@ -34,7 +35,7 @@ const manualTreeRendering = (ManualTreeData: any, handleOnDropInTree:(e:React.Dr
           {
               ManualTreeData.map((item: any)=>
                   <li key={item.id} className={item.text+item.id}>
-                      <div data-id={item.id} onDrop={(e) => handleOnDropInTree(e)} onDragOver={(e) => e.preventDefault()}>
+                      <div data-id={item.id}  data-level={item.level} onDrop={(e) => handleOnDropInTree(e)} onDragOver={(e) => e.preventDefault()}>
                         <img src={actCondImages[`${item.text}`]} alt={item.text} width="75%" height="100%" />
                       </div>
                       {
@@ -55,6 +56,7 @@ const manualTreeRendering = (ManualTreeData: any, handleOnDropInTree:(e:React.Dr
 const emptyEmptyOnceCellTree = [
     {
       id:1,
+      level:0,
       diamond:false,
       condTab: [],
       text:'Condition or Action',
@@ -123,7 +125,7 @@ const createLookUpTable = (treeData: any) => {
 
 const TreeManual =({lookUpTableCallback}:{lookUpTableCallback:any}) => {
 
-// States
+const treeRef = useRef<HTMLDivElement>(null);
 
 // Tree elements
   const [manualTreeData, setManualTreeData] = useState<any>(emptyEmptyOnceCellTree); //Data of the manually created tree
@@ -131,10 +133,20 @@ const TreeManual =({lookUpTableCallback}:{lookUpTableCallback:any}) => {
 
 // Functions
 
+    // Count number of elements in the tree
+    const countElements = (treeData: any) => {
+        let count = 1;
+        treeData.forEach((item: any) => {
+            count += countElements(item.children);
+        });
+        return count;
+    }
+
     const handleOnDropInTree = (e: React.DragEvent) => {
 
         // Get id of the drop area
         const dropAreaId = e.currentTarget.getAttribute('data-id');
+        const dropAreaLevel = e.currentTarget.getAttribute('data-level');
         // Get data of the dropped element
         const droppedData = e.dataTransfer.getData('draggedData');
         const { type, name, condTab } = JSON.parse(droppedData);
@@ -161,6 +173,7 @@ const TreeManual =({lookUpTableCallback}:{lookUpTableCallback:any}) => {
                         children:[
                         {
                             id: newMaxId+1,
+                            level: item.level+1,
                             diamond: false,
                             condTab: [],
                             text: 'Condition or Action',
@@ -168,6 +181,7 @@ const TreeManual =({lookUpTableCallback}:{lookUpTableCallback:any}) => {
                         }, 
                         {
                             id: newMaxId+2,
+                            level: item.level+1,
                             diamond: false,
                             condTab: [],
                             text: 'Condition or Action',
@@ -179,17 +193,23 @@ const TreeManual =({lookUpTableCallback}:{lookUpTableCallback:any}) => {
             } else {
                 return {
                 ...item, 
-                children: updateChildren(item, type, name, dropAreaId, condTab)
+                children: updateChildren(item, type, name, dropAreaId, dropAreaLevel, condTab)
                 }
             }
         });
 
-        // Update the state
+        // Avoid tree with more than 11 elements
+        const nbElements = countElements(newManualTreeData)-1;
+        if (nbElements > 11) {
+            alert('The tree cannot have more than 11 elements');
+            return;
+        }
+
         setManualTreeData(newManualTreeData);
     }
 
     // helper function to recursively update the children in the tree
-    const updateChildren = (item:any, type:string, name:string, dropAreaId:string|null, condTab:any[]) => {
+    const updateChildren = (item:any, type:string, name:string, dropAreaId:string|null, dropAreaLevel:string|null, condTab:any[]) => {
 
         const newChildren = item.children.map((child: any) => {
         if (child.id == dropAreaId) {
@@ -213,6 +233,7 @@ const TreeManual =({lookUpTableCallback}:{lookUpTableCallback:any}) => {
                 children:[
                 {
                     id: newMaxId+1,
+                    level: child.level+1,
                     diamond: false,
                     condTab: [],
                     text: 'Condition or Action',
@@ -220,6 +241,7 @@ const TreeManual =({lookUpTableCallback}:{lookUpTableCallback:any}) => {
                 }, 
                 {
                     id: newMaxId+2,
+                    level: child.level+1,
                     diamond: false,
                     condTab: [],
                     text: 'Condition or Action',
@@ -231,7 +253,7 @@ const TreeManual =({lookUpTableCallback}:{lookUpTableCallback:any}) => {
         } else {
             return {
             ...child, 
-            children: updateChildren(child, type, name, dropAreaId, condTab)
+            children: updateChildren(child, type, name, dropAreaId, dropAreaLevel, condTab)
             }
         }
         })
@@ -249,7 +271,7 @@ const TreeManual =({lookUpTableCallback}:{lookUpTableCallback:any}) => {
     // Render
 
     return (
-        <div className="tree">
+        <div className="tree" ref={treeRef} onDrop={(event)=> {event.preventDefault()}}>
             {manualTreeRendering(manualTreeData, handleOnDropInTree)}
         </div>
     )

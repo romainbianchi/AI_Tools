@@ -59,7 +59,8 @@ const layers = [
 ];
 
 const App = observer(() => {
-
+  
+  // const treeRef = useRef<HTMLDivElement>(null);
 
   // ----------------- States -----------------
   const [appState, setAppState] = useState<string>('Manual'); // State of the app
@@ -243,7 +244,7 @@ const App = observer(() => {
 
             <div className="col-4 card">
               <button onClick={onClickGetRobots}>Start the activity</button>
-              <button onClick={() => setwithoutRobot(true)}>Without Robot</button>
+              {/* <button onClick={() => setwithoutRobot(true)}>Without Robot</button> */}
             </div>
 
             <div className='col-4'></div>
@@ -315,8 +316,10 @@ const App = observer(() => {
               </div>
               
               <div className='col-9'>
-                <div className='row tree_container'>
-                  <TreeManual lookUpTableCallback={getLookUpTable} />
+                <div className='row' style={{height:'100%'}}>
+                  <div className='tree_container'>
+                    <TreeManual lookUpTableCallback={getLookUpTable} />
+                  </div>
                 </div>
               </div>
             </div>
@@ -332,7 +335,7 @@ const App = observer(() => {
               <div className='col-3'>
                 <div className='trainingButtons'>
                   <button onClick={() => onTrain(data)}>Train</button>
-                  <button onClick={() => onExecute()}>Execute</button>
+                  <button onClick={() => onExecute()}>Control</button>
                   <button onClick={() => onClear()}>Clear</button>
                   <button onClick={() => onStop()}>Stop</button>
                 </div>
@@ -354,7 +357,7 @@ const App = observer(() => {
                 {/* <div className='row'> */}
                   < div className='row' style={{height:'5%'}}>
                     <div className='smallHeaderBox'>
-                      <h4>Indicate action by clicking on a button</h4>
+                      <h4>Indicate action</h4>
                     </div>
                   </div>
 
@@ -407,9 +410,11 @@ const App = observer(() => {
                     <h2>AI Decision Tree</h2>
                   </div>
 
-                  <div className='row tree_container'>
-                    <TreeAI data={treeData} renderTree={renderTree} />
-                  </div> 
+                  <div className='row'>
+                    <div className='row tree_container'>
+                      <TreeAI data={treeData} renderTree={renderTree} />
+                    </div> 
+                  </div>
               </div>
 
             </div>

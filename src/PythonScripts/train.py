@@ -15,7 +15,11 @@ app = Flask(__name__)
 cors = CORS(app, resources={r"*": {"origins": "*"}})
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-ip_address = '127.0.0.1'
+# Change to ip address of the computer
+# ip_address = '127.0.0.1'
+ip_address = '172.20.10.13'
+# Change to port number
+port = 5001
 
 
 
@@ -145,5 +149,5 @@ def predict():
 
 
 if __name__ == '__main__':
-    # app.run(host=ip_address, port=5001, debug=True)
-    app.run(debug=True)
+    app.run(host=ip_address, port=port, debug=True)
+    # app.run(debug=True)

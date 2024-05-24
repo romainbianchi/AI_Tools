@@ -26,7 +26,11 @@ export class ThymioIA implements IThymioIA {
     RIGHT: 4,
   };
 
-  ip_address = '127.0.0.1:5000'
+  // change to the ip address of the computer
+  // ip_address = '127.0.0.1:5000'
+  ip_address ='172.20.10.13';
+  // choose port
+  port = 5001;
 
   constructor({ activity, hosts }: { activity: Activity; hosts: string[] }) {
     const tdmController = Container.factoryFromInjectable<TdmController>('SERVICE', 'HostController', ['thymio2'], {
@@ -228,7 +232,7 @@ export class ThymioIA implements IThymioIA {
     const jsonData = JSON.stringify(data);
 
     // Send the data to the Python script using Flask
-    const response = await fetch(`http://${this.ip_address}/train`, {
+    const response = await fetch(`http://${this.ip_address}::${this.port}/train`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -252,7 +256,7 @@ export class ThymioIA implements IThymioIA {
     const jsonData = JSON.stringify(data);
 
     // Send the data to the Python script using Flask
-    const response = await fetch(`http://${this.ip_address}/trainsklearn`, {
+    const response = await fetch(`http://${this.ip_address}:${this.port}/trainsklearn`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -276,7 +280,7 @@ export class ThymioIA implements IThymioIA {
     const jsonData = JSON.stringify(captors);
 
     // Send the data to the Python script using Flask
-    const response = await fetch(`http://${this.ip_address}/predict`, {
+    const response = await fetch(`http://${this.ip_address}:${this.port}/predict`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
