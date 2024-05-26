@@ -81,10 +81,12 @@ const App = observer(() => {
   // Tree elements (Tree using AI)
   const [renderTree, setRenderTree] = useState<boolean>(false);
   const [treeData, setTreeData] = useState<any>(); //Data of the trained tree
+  const [modelTrained, setModelTrained] = useState<boolean>(false);
 
   // Look-up table for control with manual tree
   const [lookUpTable, setLookUpTable] = useState<any>();
   const [resetTreeTrigger, setResetTreeTrigger] = useState(false);
+  const [treeCreated, setTreeCreated] = useState(false);
 
 
 
@@ -95,7 +97,7 @@ const App = observer(() => {
     if (_robots.length > 0){
       onSelectRobot(_robots[0]);
     }else{
-      alert('No robot found');
+      alert('Aucun robot connecté');
     }
     
   };
@@ -103,10 +105,6 @@ const App = observer(() => {
   const onSelectRobot = async (robotUuid: string) => {
     user.takeControl(robotUuid);
     setControledRobot(robotUuid);
-  };
-
-  const onExecute = async () => {
-    setMode('PREDICT');
   };
 
   useEffect(() => {
@@ -182,22 +180,37 @@ const App = observer(() => {
   }
 
   const onTrain = async (data: { action: string; captors: number[] }[]) => {
-    // Train with sklearn
     var response = await user.trainDecisionTreeSklearn(data);
-    // Convert the response to JSON and store it in the treeData
     var tree = [JSON.parse(response)];
     setTreeData(tree);
-    // Set the renderTree to true
     setRenderTree(true);
+    setModelTrained(true);
   }
+
+  const onExecute = async () => {
+    if (modelTrained){
+      setMode('PREDICT');
+    }
+  };
 
   const onClear = () => {
     if(appState == 'Manual'){
+      // Clear tree
       resetTree();
+      setTreeCreated(false);
+      // Stop the robot
+      setMode('TRAIN');
+      user.emitMotorEvent(controledRobot, 'STOP', false);
     }
     if (appState == 'AI'){
+      // Clear tree
       setData([]);
       setRenderTree(false);
+      // Stop the robot
+      setMode('TRAIN');
+      user.emitMotorEvent(controledRobot, 'STOP', false);
+      setModelTrained(false);
+      
     }
   }
 
@@ -207,8 +220,10 @@ const App = observer(() => {
   }
 
   const onControl = () => {
-    // control the robot using the look-up table
-    setMode('MANUALCONTROL');
+    if (treeCreated){
+      // control the robot using the look-up table
+      setMode('MANUALCONTROL');
+    }
   }
 
   const changeMode = async () => {
@@ -333,7 +348,7 @@ const App = observer(() => {
                 <div className='col-9'>
                   <div className='row' style={{height:'100%'}}>
                     <div className='tree_container'>
-                      <TreeManual lookUpTableCallback={getLookUpTable} resetTreeTrigger={resetTreeTrigger}/>
+                      <TreeManual lookUpTableCallback={getLookUpTable} resetTreeTrigger={resetTreeTrigger} resetTree={resetTree} setTreeCreated={setTreeCreated}/>
                     </div>
                   </div>
                 </div>

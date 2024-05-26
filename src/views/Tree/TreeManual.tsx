@@ -122,7 +122,8 @@ const createLookUpTable = (treeData: any) => {
 
 
 
-const TreeManual =({lookUpTableCallback, resetTreeTrigger}:{lookUpTableCallback:any, resetTreeTrigger:boolean}) => {
+const TreeManual =({lookUpTableCallback, resetTreeTrigger, resetTree, setTreeCreated}:
+    {lookUpTableCallback:any, resetTreeTrigger:boolean, resetTree: () => void, setTreeCreated: (treeCreated:boolean) => void}) => {
 
     const treeRef = useRef<HTMLDivElement>(null);
 
@@ -266,11 +267,21 @@ const TreeManual =({lookUpTableCallback, resetTreeTrigger}:{lookUpTableCallback:
         var lookUpTable = createLookUpTable(manualTreeData);
         // Call the lookUpTableCallback function
         lookUpTableCallback(lookUpTable);
+
+        // Set tree created
+        if (manualTreeData[0].text !== 'Condition or Action') {
+            setTreeCreated(true);
+        } else {
+            setTreeCreated(false);
+        }
     }, [manualTreeData]);
 
     useEffect(() => {
-        setManualTreeData(emptyEmptyOnceCellTree);
-        treeData = emptyEmptyOnceCellTree;
+        if (resetTreeTrigger) {
+            setManualTreeData(emptyEmptyOnceCellTree);
+            treeData = emptyEmptyOnceCellTree;
+            resetTree();
+        }
     }, [resetTreeTrigger]);
 
     

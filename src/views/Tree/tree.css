@@ -38,7 +38,7 @@
 }
 .tree li::after{
     /* Add text for child on the right here */
-    content:'Activé';
+    content:'Oui';
     text-align:left;
     padding-left: 20px;
     padding-top: 10px;
@@ -47,7 +47,7 @@
 }
 .tree li::before{
     /* Add text for child on the left here */
-    content:'Pas activé';
+    content:'Non';
     text-align:right;
     padding-right:20px;
     padding-top: 10px;
