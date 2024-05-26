@@ -208,9 +208,8 @@ const App = observer(() => {
       setRenderTree(false);
       // Stop the robot
       setMode('TRAIN');
-      user.emitMotorEvent(controledRobot, 'STOP', false);
       setModelTrained(false);
-      
+      user.emitMotorEvent(controledRobot, 'STOP', false);
     }
   }
 
@@ -226,14 +225,10 @@ const App = observer(() => {
     }
   }
 
-  const changeMode = async () => {
+  const changeMode = async (mode:string) => {
     await onStop();
     console.log(mode)
-    if (appState == 'Manual'){
-      setAppState('AI');
-    }else{
-      setAppState('Manual');
-    }
+    setAppState(mode);
   }
 
 
@@ -306,8 +301,8 @@ const App = observer(() => {
                 <div className='col-4'>
                   {/* Mode Buttons */}
                   <div className="modeButtons">
-                    <button onClick={() => changeMode()} style={{filter:'opacity(40%)'}}>Intelligence Artificielle</button>
-                    <button onClick={() => changeMode()} style={{borderColor: '#b6ad85', borderWidth:'3px'}}>Manuel</button>
+                    <button onClick={() => changeMode('AI')} style={{filter:'opacity(40%)'}}>Intelligence Artificielle</button>
+                    <button onClick={() => changeMode('Manual')} style={{borderColor: '#b6ad85', borderWidth:'3px'}}>Manuel</button>
                   </div>
                 </div>
               </div>
@@ -374,8 +369,8 @@ const App = observer(() => {
                 <div className='col-5'></div>
                 <div className='col-4'>
                   <div className="modeButtons">
-                    <button onClick={() => changeMode()} style={{borderColor: '#b6ad85', borderWidth:'3px'}}>Intelligence artificielle</button>
-                    <button onClick={() => changeMode()} style={{filter:'opacity(40%)'}}>Manuel</button>
+                    <button onClick={() => changeMode('AI')} style={{borderColor: '#b6ad85', borderWidth:'3px'}}>Intelligence artificielle</button>
+                    <button onClick={() => changeMode('Manual')} style={{filter:'opacity(40%)'}}>Manuel</button>
                   </div>
                 </div>
               </div>

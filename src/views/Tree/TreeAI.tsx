@@ -19,52 +19,36 @@ const actCondImages: { [key: string]: any } = {
     'Condition or Action': '/transparent.png',
 }
 
-const countElements = (treeData: any) => {
-    let count = 0;
-    treeData.forEach((item: any) => {
-        count++;
-        if (item.children) {
-            count += countElements(item.children);
-        }
-    });
-    return count;
-}
-
-/* adapted from React-Node-Flow: https://github.com/kumarabhishek008/React-Node-Flow/tree/master */
-const treeRendering = (treeData: any) => {
-
-    if (countElements(treeData) > 11) {
-        alert("The tree is too big to be displayed. Please reduce the size of the tree.");
-        return(
-            <div></div>
-        );
-    }
-    
-    return (
-        <>
-          <ul>
-            {
-                treeData.map((item: any)=>                
-                    <li key={item.id} className={item.text+item.id}>
-                        <div>
-                        <img src={actCondImages[`${item.text}`]} alt={item.text} width="75%" height="100%" />
-                        </div>
-                        {
-                            item.children && item.children.length ?
-                            treeRendering(item.children)
-                            :''
-                        }
-                    </li>
-                )            
-                
-            }
-            </ul>
-        </>
-    )
-  }
-
 const TreeAI = ({ data, renderTree }: { data: any; renderTree: boolean }) => {
 
+    // Functions 
+    /* adapted from React-Node-Flow: https://github.com/kumarabhishek008/React-Node-Flow/tree/master */
+    const treeRendering = (treeData: any) => {
+
+        return (
+            <>
+            <ul>
+                {
+                    treeData.map((item: any)=>                
+                        <li key={item.id} className={item.text+item.id}>
+                            <div>
+                            <img src={actCondImages[`${item.text}`]} alt={item.text} width="75%" height="100%" />
+                            </div>
+                            {
+                                item.children && item.children.length ?
+                                treeRendering(item.children)
+                                :''
+                            }
+                        </li>
+                    )            
+                    
+                }
+                </ul>
+            </>
+        )
+    }
+
+    // Render
     return (    
         <>
         {renderTree ? (
