@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import './tree.css'
 import { set } from "mobx";
 
@@ -19,8 +19,26 @@ const actCondImages: { [key: string]: any } = {
     'Condition or Action': '/transparent.png',
 }
 
+const countElements = (treeData: any) => {
+    let count = 0;
+    treeData.forEach((item: any) => {
+        count++;
+        if (item.children) {
+            count += countElements(item.children);
+        }
+    });
+    return count;
+}
+
 /* adapted from React-Node-Flow: https://github.com/kumarabhishek008/React-Node-Flow/tree/master */
 const treeRendering = (treeData: any) => {
+
+    if (countElements(treeData) > 11) {
+        alert("The tree is too big to be displayed. Please reduce the size of the tree.");
+        return(
+            <div></div>
+        );
+    }
     
     return (
         <>

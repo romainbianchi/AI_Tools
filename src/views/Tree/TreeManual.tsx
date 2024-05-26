@@ -2,6 +2,7 @@ import {useEffect, useState, useRef} from 'react';
 import './tree.css';
 import { all } from '@tensorflow/tfjs';
 import { set } from 'mobx';
+import { render } from 'react-dom';
 
 interface TreeManualProps {
     lookUpTableCallback: () => void; // Define the type of lookUpTableCallback
@@ -121,7 +122,7 @@ const createLookUpTable = (treeData: any) => {
 
 
 
-const TreeManual =({lookUpTableCallback}:{lookUpTableCallback:any}) => {
+const TreeManual =({lookUpTableCallback, resetTreeTrigger}:{lookUpTableCallback:any, resetTreeTrigger:boolean}) => {
 
     const treeRef = useRef<HTMLDivElement>(null);
 
@@ -199,7 +200,7 @@ const TreeManual =({lookUpTableCallback}:{lookUpTableCallback:any}) => {
         // Avoid tree with more than 11 elements
         const nbElements = countElements(newManualTreeData)-1;
         if (nbElements > 11) {
-            alert('The tree cannot have more than 11 elements');
+            alert("L'arbre ne peut pas avoir plus que 11 éléments");
             return;
         }
 
@@ -266,6 +267,11 @@ const TreeManual =({lookUpTableCallback}:{lookUpTableCallback:any}) => {
         // Call the lookUpTableCallback function
         lookUpTableCallback(lookUpTable);
     }, [manualTreeData]);
+
+    useEffect(() => {
+        setManualTreeData(emptyEmptyOnceCellTree);
+        treeData = emptyEmptyOnceCellTree;
+    }, [resetTreeTrigger]);
 
     
     // Render

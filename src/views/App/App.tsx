@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, useImperativeHandle } from 'react';
 import './App.css';
 import '../Tree/tree.css';
 import { thymioManagerFactory } from '../../Entities/ThymioManager';
@@ -84,6 +84,8 @@ const App = observer(() => {
 
   // Look-up table for control with manual tree
   const [lookUpTable, setLookUpTable] = useState<any>();
+  const [resetTreeTrigger, setResetTreeTrigger] = useState(false);
+
 
 
   // ----------------- Functions -----------------
@@ -106,26 +108,6 @@ const App = observer(() => {
   const onExecute = async () => {
     setMode('PREDICT');
   };
-
-  // reload page if robot is disconnected
-  // useEffect(() => {
-  //   const checkRobots = async () => {
-  //     console.log('Checking robots');
-  //     user.getRobotsUuids();
-  //     try {
-  //       const robotsCheck = await user.getRobotsUuids();
-  //       if (robotsCheck.length === 0 && controledRobot !== ''){
-  //         window.location.reload();
-  //       }
-  //     }catch (error) {
-  //       console.error('Error while checking robots', error);
-  //     }
-  //   }
-  //   const interval = setInterval(() => {
-  //     checkRobots();
-  //   }, 3000);
-  //   return () => clearInterval(interval);
-  // });
 
   useEffect(() => {
     if (mode === 'PREDICT') {
@@ -181,6 +163,10 @@ const App = observer(() => {
     setLookUpTable(table);
   }
 
+  const resetTree = () => {
+    setResetTreeTrigger(prevState => !prevState);
+  };
+
   // Drag and Drop
   const handleOnDrag = (e:React.DragEvent, type: string, name: string, condTab: any[]) => {
     const data = JSON.stringify({ type, name, condTab });
@@ -206,8 +192,13 @@ const App = observer(() => {
   }
 
   const onClear = () => {
-    setData([]);
-    setRenderTree(false);
+    if(appState == 'Manual'){
+      resetTree();
+    }
+    if (appState == 'AI'){
+      setData([]);
+      setRenderTree(false);
+    }
   }
 
   const onStop = async () => {
@@ -242,7 +233,7 @@ const App = observer(() => {
 
           <div className='row'>
             <div className='col-12 mainHeader'>
-              <h1>Decision Tree with Thymio</h1>
+              <h1>AI avec Thymio</h1>
             </div>
           </div>
           
@@ -253,8 +244,8 @@ const App = observer(() => {
             </div>
 
             <div className="col-4 card">
-              <button onClick={onClickGetRobots}>Start the activity</button>
-              {/* <button onClick={() => setwithoutRobot(true)}>Without Robot</button> */}
+              <button onClick={onClickGetRobots}>Commencer l'activité</button>
+              <button onClick={() => setwithoutRobot(true)}>Without Robot</button>
             </div>
 
             <div className='col-4'></div>
@@ -264,172 +255,188 @@ const App = observer(() => {
         </>
 
       ) : (
-        // Robot is connected
-
-        appState == 'Manual' ? (
-          // App state is Manual
-
+        // display a loader while the robot is connecting
+        (user.captors.state[controledRobot] == undefined && !withoutRobot)? (
           <>
-            <div className='row' style={{backgroundColor:'#9A9483', height:'10%'}}>
-
-              <div className='col-3'>
-                {/* control Buttons */}
-                <div className="modeButtons">
-                  <button onClick={onControl}>Control</button>
-                  <button onClick={onStop}>Stop</button>
-                </div>
-              </div>
-
-              <div className='col-7'></div>
-
-
-              <div className='col-2'>
-                {/* Mode Buttons */}
-                <div className="modeButtons">
-                  <button onClick={() => changeMode()} style={{backgroundColor:'#3b3c3533'}}>AI</button>
-                  <button onClick={() => changeMode()}>Manual</button>
-                </div>
-              </div>
+            <div className='loaderContainer'>
+              <div className='loader'></div>
             </div>
 
-            <div className='row' style={{height:'90%'}}>
-              <div className='col-3' style={{backgroundColor:'#9A9483', height:'100%'}}>
-
-                <div className='row'>
-                  <div className='smallHeaderBox'>
-                    <h4>Conditions</h4>
-                  </div>
-                  <div className="grid">
-                    {conditions.map((condition, index) => (
-                      <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'condition', condition.name, condition.tab)}>
-                        {/* display image coresponding to the condition */}
-                        <img src={conditionImage[condition.name as keyof typeof conditionImage]} alt={condition.name} width="60%" height="100%" />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className='row'>
-                <div className='smallHeaderBox'>
-                    <h4>Actions</h4>
-                  </div>
-                  <div className="grid">
-                    {actions.map((action, index) => (
-                      <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'action', action, [])}>
-                        {/* display image coresponding to the action */}
-                        <img src={actionImage[action as keyof typeof actionImage]} alt={action} width="60%" height="100%" />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-            
-              </div>
-              
-              <div className='col-9'>
-                <div className='row' style={{height:'100%'}}>
-                  <div className='tree_container'>
-                    <TreeManual lookUpTableCallback={getLookUpTable} />
-                  </div>
-                </div>
-              </div>
-            </div>
-
+            {/* <h2>Connecting to the robot...</h2> */}
+            <h2>Connexion au robot</h2>
           </>
 
         ) : (
-          // App state is AI
 
-          <>
+          // Robot is connected
+          
+          appState == 'Manual' ? (
+            // App state is Manual
 
-            <div className='row' style={{backgroundColor:'#9A9483', height:'10%'}}>
-              <div className='col-3'>
-                <div className='trainingButtons'>
-                  <button onClick={() => onTrain(data)}>Train</button>
-                  <button onClick={() => onExecute()}>Control</button>
-                  <button onClick={() => onClear()}>Clear</button>
-                  <button onClick={() => onStop()}>Stop</button>
+            <>
+              <div className='row' style={{backgroundColor:'#9A9483', height:'10%'}}>
+
+                <div className='col-3'>
+                  {/* control Buttons */}
+                  <div className="trainingButtons">
+                    <button onClick={onControl}>Contrôler</button>
+                    <button onClick={onClear}>Effacer</button>
+                    <button onClick={onStop}>Stop</button>
+                  </div>
+                </div>
+
+                <div className='col-5'></div>
+
+
+                <div className='col-4'>
+                  {/* Mode Buttons */}
+                  <div className="modeButtons">
+                    <button onClick={() => changeMode()} style={{filter:'opacity(40%)'}}>Intelligence Artificielle</button>
+                    <button onClick={() => changeMode()} style={{borderColor: '#b6ad85', borderWidth:'3px'}}>Manuel</button>
+                  </div>
                 </div>
               </div>
 
-              <div className='col-7'></div>
-              <div className='col-2'>
-                <div className="modeButtons">
-                  <button onClick={() => changeMode()}>AI</button>
-                  <button onClick={() => changeMode()} style={{backgroundColor:'#3b3c3533'}}>Manual</button>
-                </div>
-              </div>
-            </div>
+              <div className='row' style={{height:'90%'}}>
+                <div className='col-3' style={{backgroundColor:'#9A9483', height:'100%'}}>
 
-            <div className='row' style={{height:'90%'}}>
-
-              <div className='col-3' style={{backgroundColor:'#9A9483', height:'100%'}}>
-
-                {/* <div className='row'> */}
-                  < div className='row' style={{height:'5%'}}>
+                  <div className='row'>
                     <div className='smallHeaderBox'>
-                      <h4>Indicate action</h4>
+                      <h4>Conditions</h4>
+                    </div>
+                    <div className="grid">
+                      {conditions.map((condition, index) => (
+                        <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'condition', condition.name, condition.tab)}>
+                          {/* display image coresponding to the condition */}
+                          <img src={conditionImage[condition.name as keyof typeof conditionImage]} alt={condition.name} width="60%" height="100%" />
+                        </div>
+                      ))}
                     </div>
                   </div>
 
-                  {/* Seperate table header, allow to avoid hidding the header when scrolling in the table */}
-                  <div className='row' style={{ height:'5%'}}>
-                    <table style={{width:'100%', height:'100%'}}>
-                      <thead>
-                        <tr>
-                          <th style={{width:'50%'}}>Sensors</th>
-                          <th style={{width:'50%'}}>Action</th>
-                        </tr>
-                      </thead>
-                    </table>
+                  <div className='row'>
+                  <div className='smallHeaderBox'>
+                      <h4>Actions</h4>
+                    </div>
+                    <div className="grid">
+                      {actions.map((action, index) => (
+                        <div key={index} draggable="true" className="draggableBox" onDragStart={(e) => handleOnDrag(e, 'action', action, [])}>
+                          {/* display image coresponding to the action */}
+                          <img src={actionImage[action as keyof typeof actionImage]} alt={action} width="60%" height="100%" />
+                        </div>
+                      ))}
+                    </div>
                   </div>
+              
+                </div>
+                
+                <div className='col-9'>
+                  <div className='row' style={{height:'100%'}}>
+                    <div className='tree_container'>
+                      <TreeManual lookUpTableCallback={getLookUpTable} resetTreeTrigger={resetTreeTrigger}/>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-                  {/* Table body */}
-                  <div className='row' style={{height:'88%'}}>
-                    {/* Display training data collected */}
-                    <div className='customTable'>
-                      <table style={{width:'100%'}}>
+            </>
+
+          ) : (
+            // App state is AI
+
+            <>
+
+              <div className='row' style={{backgroundColor:'#9A9483', height:'10%'}}>
+                <div className='col-3'>
+                  <div className='trainingButtons'>
+                    <button onClick={() => onTrain(data)}>Entrainer</button>
+                    <button onClick={() => onExecute()}>Contrôler</button>
+                    <button onClick={() => onClear()}>Effacer</button>
+                    <button onClick={() => onStop()}>Stop</button>
+                  </div>
+                </div>
+
+                <div className='col-5'></div>
+                <div className='col-4'>
+                  <div className="modeButtons">
+                    <button onClick={() => changeMode()} style={{borderColor: '#b6ad85', borderWidth:'3px'}}>Intelligence artificielle</button>
+                    <button onClick={() => changeMode()} style={{filter:'opacity(40%)'}}>Manuel</button>
+                  </div>
+                </div>
+              </div>
+
+              <div className='row' style={{height:'90%'}}>
+
+                <div className='col-3' style={{backgroundColor:'#9A9483', height:'100%'}}>
+
+                  {/* <div className='row'> */}
+                    < div className='row' style={{height:'5%'}}>
+                      <div className='smallHeaderBox'>
+                        <h4>Indiquer une action</h4>
+                      </div>
+                    </div>
+
+                    {/* Seperate table header, allow to avoid hidding the header when scrolling in the table */}
+                    <div className='row' style={{ height:'5%'}}>
+                      <table style={{width:'100%', height:'100%'}}>
                         <thead>
                           <tr>
-                            <th style={{width:'50%'}}></th>
-                            <th style={{width:'50%'}}></th>
+                            <th style={{width:'50%'}}>Capteurs</th>
+                            <th style={{width:'50%'}}>Action</th>
                           </tr>
                         </thead>
-                        <tbody>
-                        {data.map(({ action, captors }, index) => (
-                          <tr key={index}>
-                            {/* Image that shows all the sensor activated*/}
-                            <td>
-                              <LayeredImage visibleLayers={captors}/>
-                            </td>
-                            {/* image of the action */}
-                            <td style={{display:'flex', justifyContent:'center'}}>
-                              <div style={{width:'7vw', height:'6vw'}}>
-                                <img src={actionImage[action as keyof typeof actionImage]} alt={action} style={{width:'100%', height:'100%'}}/>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                        </tbody>
                       </table>
                     </div>
-                  </div>
+
+                    {/* Table body */}
+                    <div className='row' style={{height:'88%'}}>
+                      {/* Display training data collected */}
+                      <div className='customTable'>
+                        <table style={{width:'100%'}}>
+                          <thead>
+                            <tr>
+                              <th style={{width:'50%'}}></th>
+                              <th style={{width:'50%'}}></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          {data.map(({ action, captors }, index) => (
+                            <tr key={index}>
+                              {/* Image that shows all the sensor activated*/}
+                              <td>
+                                <LayeredImage visibleLayers={captors}/>
+                              </td>
+                              {/* image of the action */}
+                              <td style={{display:'flex', justifyContent:'center'}}>
+                                <div style={{width:'7vw', height:'6vw'}}>
+                                  <img src={actionImage[action as keyof typeof actionImage]} alt={action} style={{width:'100%', height:'100%'}}/>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                </div>
+
+                <div className='col-9'>
+                    <div className='row'>
+                      <h2>Arbre de decision</h2>
+                    </div>
+
+                    <div className='row'>
+                      <div className='row tree_container'>
+                        <TreeAI data={treeData} renderTree={renderTree} />
+                      </div> 
+                    </div>
+                </div>
+
               </div>
 
-              <div className='col-9'>
-                  <div className='row'>
-                    <h2>AI Decision Tree</h2>
-                  </div>
+            </>
 
-                  <div className='row'>
-                    <div className='row tree_container'>
-                      <TreeAI data={treeData} renderTree={renderTree} />
-                    </div> 
-                  </div>
-              </div>
-
-            </div>
-
-          </>
+          )
 
         )
 
