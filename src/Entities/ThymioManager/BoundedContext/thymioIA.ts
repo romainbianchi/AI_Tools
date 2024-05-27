@@ -27,10 +27,11 @@ export class ThymioIA implements IThymioIA {
   };
 
   // change to the ip address of the computer
-  // ip_address = '127.0.0.1:5000'
-  ip_address ='172.20.10.13';
+  ip_address = '127.0.0.1'
+  // ip_address ='172.20.10.13';
   // choose port
-  port = 5001;
+  port = 5000;
+  // port = 5001;
 
   constructor({ activity, hosts }: { activity: Activity; hosts: string[] }) {
     const tdmController = Container.factoryFromInjectable<TdmController>('SERVICE', 'HostController', ['thymio2'], {

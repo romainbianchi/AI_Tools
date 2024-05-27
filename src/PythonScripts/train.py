@@ -4,8 +4,6 @@ from flask_cors import CORS, cross_origin
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import tensorflow as tf
-import tensorflow_decision_forests as tfdf
 from sklearn import tree
 import pickle as pkl
 
@@ -17,71 +15,10 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 # Change to ip address of the computer
 # ip_address = '127.0.0.1'
-ip_address = '172.20.10.13'
+# ip_address = '172.20.10.13'
 # Change to port number
 port = 5001
 
-
-
-@app.route('/train', methods=['POST'])
-@cross_origin(origin='*',headers=['Content-Type','Authorization'])
-def train_model():
-    data = request.json  # Get the JSON data from the request body
-    # Process the received data as needed (e.g., train a machine learning model)
-
-    # extend data by copying all the rows three times
-    data = data * 10
-
-    # convert the data to a pandas dataframe
-    df = pd.DataFrame(data)
-    df.rename(columns={'captors': 'sensors'}, inplace=True)
-    df_sensors = pd.DataFrame(df['sensors'].values.tolist(), columns=[f'sensor_{i}' for i in range(len(df['sensors'].iloc[0]))])
-    df = pd.concat([df.drop('sensors', axis=1), df_sensors], axis=1)
-
-    # Create an array of actions according to the order in input data
-    actions = df['action'].unique()
-
-    # Prepare data for training
-    train_ds = tfdf.keras.pd_dataframe_to_tf_dataset(df, label='action')
-
-    # Create and train the model
-    model = tfdf.keras.CartModel(task=tfdf.keras.Task.CLASSIFICATION)
-    model.fit(train_ds)
-
-    # test input
-    test_input = {
-        'sensor_0': tf.constant([[1]]),
-        'sensor_1': tf.constant([[1]]),
-        'sensor_2': tf.constant([[0]]),
-        'sensor_3': tf.constant([[0]]),
-        'sensor_4': tf.constant([[0]]),
-        'sensor_5': tf.constant([[0]]),
-        'sensor_6': tf.constant([[0]]),
-        'sensor_7': tf.constant([[0]]),
-        'sensor_8': tf.constant([[0]])
-    }
-
-    # Prints for debugging
-    print(df)
-    print(actions)
-    test_input_print = []
-    for i in range(len(test_input)):
-        test_input_print.append(test_input[f'sensor_{i}'].numpy()[0][0])
-    print(test_input_print)
-
-    print('---------------- PREDICTIONS ----------------')
-    # Make predictions
-    # predictions = model.predict(test_input)
-    predictions = model.call(test_input)
-    print(predictions)
-
-    # label the prediction
-    predicted_action = actions[np.argmax(predictions)]
-    print('Predicted action: ', predicted_action)
-
-    # Send back a response
-    response_data = {'message': 'TrainTensorflow'}
-    return jsonify(response_data), 200
 
 
 
@@ -149,5 +86,5 @@ def predict():
 
 
 if __name__ == '__main__':
-    app.run(host=ip_address, port=port, debug=True)
-    # app.run(debug=True)
+    # app.run(host=ip_address, port=port, debug=True)
+    app.run(debug=True)
