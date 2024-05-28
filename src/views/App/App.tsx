@@ -176,7 +176,7 @@ const App = observer(() => {
     // add new data when click on the action
     setData([...data, { action, captors: user.captors.state[controledRobot].slice(2) }]); // slice to remove the first two elements of the captors (ground sensors)
     // emit event to the robot
-    // await user.emitMotorEvent(controledRobot, action, true);
+    await user.emitMotorEvent(controledRobot, action, true);
   }
 
   const onTrain = async (data: { action: string; captors: number[] }[]) => {
@@ -380,9 +380,9 @@ const App = observer(() => {
                 <div className='col-3' style={{backgroundColor:'#9A9483', height:'100%'}}>
 
                   {/* <div className='row'> */}
-                    < div className='row' style={{height:'5%'}}>
+                    < div className='row' style={{height:'10%'}}>
                       <div className='smallHeaderBox'>
-                        <h4>Indiquer une action</h4>
+                        <h4>Indiquer une action avec les boutons du robot</h4>
                       </div>
                     </div>
 
@@ -399,7 +399,7 @@ const App = observer(() => {
                     </div>
 
                     {/* Table body */}
-                    <div className='row' style={{height:'88%'}}>
+                    <div className='row' style={{height:'83%'}}>
                       {/* Display training data collected */}
                       <div className='customTable'>
                         <table style={{width:'100%'}}>
@@ -432,7 +432,7 @@ const App = observer(() => {
 
                 <div className='col-9'>
                     <div className='row'>
-                      <h2>Arbre de decision</h2>
+                      <h2>Arbre de décision</h2>
                     </div>
 
                     <div className='row'>
