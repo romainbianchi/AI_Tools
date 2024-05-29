@@ -1,20 +1,37 @@
 /* Adapted from React-Node-Flow: https://github.com/kumarabhishek008/React-Node-Flow/tree/master */
-.tree_container {
+.tree_containerAI {
+    display: block;
+    justify-content: center;
+    align-items: top;
+    height: 90%;
+    width:100%;
+    /* max-width: 100%; */
+    overflow-x: auto;
+    overflow-y: auto; 
+}
+
+.tree_containerManual {
     display: flex;
     justify-content: center;
     align-items: top;
-    height: 100%;
+    height: 90%;
     width:100%;
-    max-width: 100%;
+    /* max-width: 100%; */
+    overflow-x: auto;
+    overflow-y: auto; 
 }
 
 .tree {
+    width: max-content;
     height:auto;
-    display:inline-block;
+    display:block;
+    /* overflow-x: auto;
+    overflow-y: auto;  */
 }
 
 .tree ul {
     padding-top: 20px; position: relative;
+    white-space: nowrap;
 }
 
 .tree li {
@@ -85,7 +102,6 @@
     width: 0; height: 20px;
 }
 .tree li div{
-    /* border: 3px solid #ccc; */
     border: 2px solid #847f72;
     padding: 5px 0px;
     text-decoration: none;
@@ -93,11 +109,14 @@
     font-family: arial, verdana, tahoma;
     font-size: 20px;
     display: inline-block;
-    /* height:100px;
-    width: 160px; */
-    /* height: 15%;
-    width: 20%; */
     height: 5.5vw;
     width: 8vw;
     border-radius: 10px;
 }
+
+/* ul, ul::before, li, li::before, li::after {
+    width: var(--scale-factor);
+    height: var(--scale-factor);
+} */
+
+  

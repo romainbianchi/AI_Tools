@@ -342,7 +342,7 @@ const App = observer(() => {
                 
                 <div className='col-9'>
                   <div className='row' style={{height:'100%'}}>
-                    <div className='tree_container'>
+                    <div className='tree_containerManual'>
                       <TreeManual lookUpTableCallback={getLookUpTable} resetTreeTrigger={resetTreeTrigger} resetTree={resetTree} setTreeCreated={setTreeCreated}/>
                     </div>
                   </div>
@@ -435,11 +435,9 @@ const App = observer(() => {
                       <h2>Arbre de décision</h2>
                     </div>
 
-                    <div className='row'>
-                      <div className='row tree_container'>
-                        <TreeAI data={treeData} renderTree={renderTree} />
-                      </div> 
-                    </div>
+                    <div className='row tree_containerAI'>
+                      <TreeAI data={treeData} renderTree={renderTree} />
+                    </div> 
                 </div>
 
               </div>
