@@ -200,10 +200,10 @@ const TreeManual =({lookUpTableCallback, resetTreeTrigger, resetTree, setTreeCre
 
         // Avoid tree with more than 11 elements
         const nbElements = countElements(newManualTreeData)-1;
-        if (nbElements > 11) {
-            alert("L'arbre ne peut pas avoir plus que 11 éléments");
-            return;
-        }
+        // if (nbElements > 11) {
+        //     alert("L'arbre ne peut pas avoir plus que 11 éléments");
+        //     return;
+        // }
 
         setManualTreeData(newManualTreeData);
         treeData = newManualTreeData;

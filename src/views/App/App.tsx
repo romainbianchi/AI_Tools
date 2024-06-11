@@ -243,7 +243,7 @@ const App = observer(() => {
 
           <div className='row'>
             <div className='col-12 mainHeader'>
-              <h1>AI avec Thymio</h1>
+              <h1>IA avec Thymio</h1>
             </div>
           </div>
           
@@ -255,7 +255,7 @@ const App = observer(() => {
 
             <div className="col-4 card">
               <button onClick={onClickGetRobots}>Commencer l'activité</button>
-              <button onClick={() => setwithoutRobot(true)}>Without Robot</button>
+              {/* <button onClick={() => setwithoutRobot(true)}>Without Robot</button> */}
             </div>
 
             <div className='col-4'></div>
@@ -342,7 +342,7 @@ const App = observer(() => {
                 
                 <div className='col-9'>
                   <div className='row' style={{height:'100%'}}>
-                    <div className='tree_containerManual'>
+                    <div className='tree_containerAI'>
                       <TreeManual lookUpTableCallback={getLookUpTable} resetTreeTrigger={resetTreeTrigger} resetTree={resetTree} setTreeCreated={setTreeCreated}/>
                     </div>
                   </div>

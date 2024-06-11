@@ -35,7 +35,8 @@
 }
 
 .tree li {
-    float: left; text-align: center;
+    float: left; 
+    text-align: center;
     list-style-type: none;
     position: relative;
     padding: 50px 5px 0 0.2vh;
