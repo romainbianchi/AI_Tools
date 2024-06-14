@@ -1,3 +1,12 @@
+# AI Tools
+
+This project is an application to allow to introduce artificiall intelligence and decision tree interactively with a Thymio robot. 
+
+It is based on an application 'ThymioIA' provided by Mobsya: https://github.com/Mobsya/ThymioIA.git
+
+The following is the original Readme for the ThymioIA application and describes the steps required for the installation. 
+
+"
 # ThymioIA React Application
 
 This project is a React application that integrates with TensorFlow.js and Thymio robots for interactive AI learning and control. It uses Vite as a build tool for a fast development experience.
@@ -82,4 +91,4 @@ For further customization and advanced configurations, refer to the official Vit
 ## Contributing
 
 Contributions to this project are welcome! Please refer to the contributing guidelines for more details.
-
+"
