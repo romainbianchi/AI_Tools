@@ -1,11 +1,11 @@
 /* Adapted from React-Node-Flow: https://github.com/kumarabhishek008/React-Node-Flow/tree/master */
+
 .tree_containerAI {
     display: block;
     justify-content: center;
     align-items: top;
     height: 90%;
     width:100%;
-    /* max-width: 100%; */
     overflow-x: auto;
     overflow-y: auto; 
 }
@@ -16,7 +16,6 @@
     align-items: top;
     height: 90%;
     width:100%;
-    /* max-width: 100%; */
     overflow-x: auto;
     overflow-y: auto; 
 }
@@ -25,8 +24,6 @@
     width: max-content;
     height:auto;
     display:block;
-    /* overflow-x: auto;
-    overflow-y: auto;  */
 }
 
 .tree ul {
@@ -114,10 +111,5 @@
     width: 8vw;
     border-radius: 10px;
 }
-
-/* ul, ul::before, li, li::before, li::after {
-    width: var(--scale-factor);
-    height: var(--scale-factor);
-} */
 
   

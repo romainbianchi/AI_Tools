@@ -272,7 +272,6 @@ const App = observer(() => {
               <div className='loader'></div>
             </div>
 
-            {/* <h2>Connecting to the robot...</h2> */}
             <h2>Connexion au robot</h2>
           </>
 

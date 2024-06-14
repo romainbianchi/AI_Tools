@@ -102,17 +102,12 @@
 
 .column {
   display: inline-block;
-  /* width: 50%; */
   height: 100%;
 }
 
 .rightColumnBox {
-  /* border: 1px solid black; */
-  /* width: 100%; */
   height: 30%;
   padding-bottom: 60px;
-  /* overflow: auto; */
-  /* padding-left: 10em; */
 }
 
 .grid {
@@ -123,7 +118,6 @@
 
 .leftColumnBox {
   display: free;
-  /* border: 1px solid black; */
   width: 100%;
   height: 70%;
 }
@@ -135,7 +129,6 @@
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  /* background-color: rgba(95, 108, 121, 0.916); */
   cursor: pointer;
   transition: border-color 0.25s;
   color: white;
@@ -148,7 +141,6 @@
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  /* background-color: rgba(177, 205, 231, 0.916); */
   transition: border-color 0.25s;
   color: rgb(17, 1, 1);
   width: 100%;
