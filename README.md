@@ -1,10 +1,10 @@
 # AI Tools
 
-This project is an application to allow to introduce artificiall intelligence and decision tree interactively with a Thymio robot. 
+This project is an application designed to interactively introduce artificial intelligence and decision trees using a Thymio robot.
 
-It is based on an application 'ThymioIA' provided by Mobsya: https://github.com/Mobsya/ThymioIA.git
+It is based on the 'ThymioIA' application provided by Mobsya, available at: https://github.com/Mobsya/ThymioIA.git
 
-The following is the original Readme for the ThymioIA application and describes the steps required for the installation. 
+Below is the original README for the ThymioIA application, which outlines the steps required for installation.
 
 "
 # ThymioIA React Application
@@ -91,4 +91,5 @@ For further customization and advanced configurations, refer to the official Vit
 ## Contributing
 
 Contributions to this project are welcome! Please refer to the contributing guidelines for more details.
+
 "
