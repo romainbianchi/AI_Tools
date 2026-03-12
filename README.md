@@ -19,6 +19,20 @@ differences between **human-designed logical rules** and **data-driven
 machine learning models**, while visualizing the decision process and
 observing how it affects the robot’s behavior in the real world.
 
+<br/>
+
+<div align="center">
+  <div>
+    <img src="Images/Manual_TwoLvlTree.png" width="800"/><br/>
+    <sub>Application manual mode</sub>
+  </div>
+  <br/>
+  <div>
+    <img src="Images/AI.png" width="800"/><br/>
+    <sub>Application AI mode</sub>
+  </div>
+</div>
+
 ## Prerequisites
 
 Before you begin, ensure you have installed the following on your system:
