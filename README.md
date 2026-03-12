@@ -27,6 +27,8 @@ observing how it affects the robot’s behavior in the real world.
     <sub>Application manual mode</sub>
   </div>
   <br/>
+  <br/>
+  <br/>
   <div>
     <img src="Images/AI.png" width="800"/><br/>
     <sub>Application AI mode</sub>
