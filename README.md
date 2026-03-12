@@ -11,7 +11,7 @@ The application allows users to explore how machines make decisions by
 controlling the robot using **decision trees**. The project provides two
 different approaches to robot control:
 
-- **Manual mode**, where users construct a decision tree themselves to define the robot’s behavior.
+- **Manual mode**, where users construct a decision tree themselves using a **drag-and-drop interface** to define the robot’s behavior.
 - **AI mode**, where users collect training data and automatically generate a decision tree using a machine learning model.
 
 By comparing these two approaches, users can better understand the
