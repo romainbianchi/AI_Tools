@@ -1,15 +1,23 @@
 # AI Tools
 
-This project is an application designed to interactively introduce artificial intelligence and decision trees using a Thymio robot.
+This project is an interactive educational platform designed to introduce
+**artificial intelligence concepts** through hands-on interaction with a
+robot.
 
-It is based on the 'ThymioIA' application provided by Mobsya, available at: https://github.com/Mobsya/ThymioIA.git
+The system combines a **web interface**, a **Python backend for machine
+learning**, and the **Thymio educational robot**
 
-Below is the original README for the ThymioIA application, which outlines the steps required for installation.
+The application allows users to explore how machines make decisions by
+controlling the robot using **decision trees**. The project provides two
+different approaches to robot control:
 
-"
-# ThymioIA React Application
+- **Manual mode**, where users construct a decision tree themselves to define the robot’s behavior.
+- **AI mode**, where users collect training data and automatically generate a decision tree using a machine learning model.
 
-This project is a React application that integrates with TensorFlow.js and Thymio robots for interactive AI learning and control. It uses Vite as a build tool for a fast development experience.
+By comparing these two approaches, users can better understand the
+differences between **human-designed logical rules** and **data-driven
+machine learning models**, while visualizing the decision process and
+observing how it affects the robot’s behavior in the real world.
 
 ## Prerequisites
 
@@ -25,8 +33,8 @@ To set up the project, follow these steps:
 1. **Clone the repository:**
 
 ```bash
-git clone https://github.com/Mobsya/ThymioIA.git
-cd thymioia
+git clone https://github.com/romainbianchi/AI_Tools.git
+cd AI_Tools
 ```
 
 2. **Install dependencies:**
@@ -48,48 +56,13 @@ yarn dev
 
 This will start the Vite development server and you can view your application at `http://localhost:3000`.
 
-4. **Building for Production:**
+## Acknowledgments
 
-To build the application for production deployment:
+This project builds upon the **ThymioIA** project developed by **Mobsya**.
 
-with Yarn:
+The original repository can be found here:
+https://github.com/Mobsya/ThymioIA
 
-```bash
-yarn build
-```
+Parts of the setup and project structure follow the original implementation.
 
-This will generate a `dist` folder in your project directory with optimized assets for deployment.
-
-## Using ESLint and Prettier
-
-The project is configured with ESLint for linting and Prettier for code formatting. You can run the linter with:
-
-```bash
-npm run lint
-```
-
-Or format your code with Prettier:
-
-```bash
-npm run format
-```
-
-## Committing Changes
-
-This project uses Commitizen for structured commit messages. To make a commit:
-
-```bash
-yarn commit
-```
-
-Follow the prompts to complete your commit message.
-
-## Additional Configuration
-
-For further customization and advanced configurations, refer to the official Vite documentation at [https://vitejs.dev](https://vitejs.dev) and the React documentation at [https://reactjs.org](https://reactjs.org).
-
-## Contributing
-
-Contributions to this project are welcome! Please refer to the contributing guidelines for more details.
-
-"
+This repository extends the original project to create an **interactive application for introducing artificial intelligence concepts**, with a focus on **decision trees and AI-based robot behaviors**.
