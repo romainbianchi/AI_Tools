@@ -8,8 +8,10 @@ The system combines a **web interface**, a **Python backend for machine
 learning**, and the **Thymio educational robot**
 
 The application allows users to explore how machines make decisions by
-controlling the robot using **decision trees**. The project provides two
-different approaches to robot control:
+controlling the robot using decision trees. The robot’s behavior is defined
+by mapping **sensor inputs to movement actions**, meaning it reacts to its
+environment (e.g., detecting obstacles) by adapting its motion. The project
+provides two different approaches to robot control:
 
 - **Manual mode**, where users construct a decision tree themselves using a **drag-and-drop interface** to define the robot’s behavior.
 - **AI mode**, where users collect training data and automatically generate a decision tree using a machine learning model.
